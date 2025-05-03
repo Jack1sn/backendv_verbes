@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-VilleverbesApplication<villeverbes>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "br.net.villeverbes.VilleverbesApplication",
+            "projectName": "villeverbes",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
