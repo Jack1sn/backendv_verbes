@@ -1,21 +1,23 @@
 package br.net.villeverbes.repository;
 
-
-import br.net.villeverbes.model.Usuario;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
 import java.util.Optional;
 
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
-    Optional<Usuario> findById(int id);
-    Optional<Usuario> findByEmail(String email);
-    List<Usuario> findByPerfil(String perfil);
-    List<Usuario> findByIdAndPerfil(Integer id, String perfil);
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-    Optional<Usuario> findByPerfilAndIdNot(String perfil, Integer id);
+import br.net.villeverbes.entity.UsuarioEntity;
+
+@Repository
+public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
+
+    Optional<UsuarioEntity> findByEmail(String email);
+
+    List<UsuarioEntity> findByPerfil(String perfil);
+
+    List<UsuarioEntity> findByIdAndPerfil(Long id, String perfil);
+
+    Optional<UsuarioEntity> findByPerfilAndIdNot(String perfil, Long id);
+
+    boolean existsByEmail(String email); // correto!
 }
-
-
-
-

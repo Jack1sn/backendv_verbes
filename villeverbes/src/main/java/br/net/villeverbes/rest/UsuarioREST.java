@@ -1,178 +1,95 @@
 package br.net.villeverbes.rest;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.stream.Collectors;
-
+import br.net.villeverbes.dto.UsuarioDTO;
+import br.net.villeverbes.entity.UsuarioEntity;
+import br.net.villeverbes.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import br.net.villeverbes.model.LoginResponse;
-import br.net.villeverbes.model.Usuario;
-import br.net.villeverbes.repository.UsuarioRepository;
-import br.net.villeverbes.service.EmailService;
+import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200") // Permite chamadas da aplicação Angular
 @RestController
+@RequestMapping("/usuario")
 public class UsuarioREST {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioService usuarioService;
 
-    @Autowired
-    private EmailService testeEmail;
-
-    @GetMapping("/usuarios")
-    public List<Usuario> obterTodosUsuarios() {
-        return usuarioRepository.findAll();
-    }
-
-    @GetMapping("/clientes")
-    public ResponseEntity<List<Usuario>> obterTodosClientes() {
-        List<Usuario> usuarios = usuarioRepository.findByPerfil("CLIENTE");
-        if (usuarios.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(usuarios);
-    }
-
-    @GetMapping("/clientes/{id}")
-    public ResponseEntity<List<Usuario>> obterClientePorId(@PathVariable("id") int id) {
-        List<Usuario> usuarios = usuarioRepository.findByIdAndPerfil(id,"CLIENTE");
-        if (usuarios.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(usuarios);
-    }
-
-    @GetMapping("/funcionario/{id}")
-    public ResponseEntity<List<Usuario>> obterFUncionarioPorId(@PathVariable("id") int id) {
-        List<Usuario> usuarios = usuarioRepository.findByIdAndPerfil(id,"FUNCIONARIO");
-        if (usuarios.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(usuarios);
-    }
-
-    @GetMapping("/funcionarios")
-    public ResponseEntity<List<Usuario>> obterTodosFuncionarios() {
-        List<Usuario> usuarios = usuarioRepository.findByPerfil("FUNCIONARIO");
-        if (usuarios.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(usuarios);
-    }
-
-    @PostMapping("/clientes/autocadastro")
-    public ResponseEntity<String> inserirCliente(@RequestBody Usuario cliente) {
-        if (usuarioRepository.findByEmail(cliente.getEmail()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("E-mail já cadastrado");
-        }
-
-        cliente.setPerfil("CLIENTE");
-        String senhaGerada = gerarSenhaAleatoria();
-        cliente.setSenha(criptografarSenha(senhaGerada));
-
-        usuarioRepository.save(cliente);
-        testeEmail.sendEmail(cliente.getEmail(), "Sua nova senha", "Sua senha é: " + senhaGerada);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Cliente cadastrado com sucesso.");
-    }
-
-    @PostMapping("/funcionario")
-    public ResponseEntity<String> inserirFuncionario(@RequestBody Usuario funcionario) {
-        if (usuarioRepository.findByEmail(funcionario.getEmail()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("E-mail já cadastrado");
-        }
-//enviar senha
-        funcionario.setPerfil("FUNCIONARIO");
-        String senhaGerada = gerarSenhaAleatoria();
-        funcionario.setSenha(criptografarSenha(senhaGerada));
-
-        usuarioRepository.save(funcionario);
-        testeEmail.sendEmail(funcionario.getEmail(), "Sua nova senha", "Sua senha é: " + senhaGerada);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Funcionário cadastrado com sucesso.");
-    }
-
-
-    @PutMapping("/funcionario/{id}")
-    public ResponseEntity<String> atualizarCliente(
-            @PathVariable("id") int id,
-            @RequestBody Usuario funcionarioAtualizado) {
-        
-        return usuarioRepository.findById(id).map(funcionario -> {
-            // Atualizar campos do cliente existente
-            funcionario.setNome(funcionarioAtualizado.getNome());
-            funcionario.setEmail(funcionarioAtualizado.getEmail());
-            funcionario.setDataNascimento(funcionarioAtualizado.getDataNascimento());
-            funcionario.setSenha(criptografarSenha(funcionarioAtualizado.getSenha()));
-            usuarioRepository.save(funcionario);
-            
-            return ResponseEntity.ok("Cliente atualizado com sucesso.");
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado."));
-    }
-    
-    @GetMapping("/funcionarios/redirecionar/{id}")
-    public ResponseEntity<List<Usuario>> obterUsuariosParaRedirecionar(@PathVariable("id") int id) {
-        List<Usuario> usuarios = usuarioRepository.findAll().stream()
-                .filter(u -> u.getId() != id && "FUNCIONARIO".equals(u.getPerfil()))
-                .collect(Collectors.toList());
-        
-        if (usuarios.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(usuarios);
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody Usuario loginData) {
-        Optional<Usuario> usuario = usuarioRepository.findByEmail(loginData.getEmail());
-
-        if (usuario.isPresent() && verificarSenha(loginData.getSenha(), usuario.get().getSenha())) {
-            return ResponseEntity.ok(new LoginResponse(usuario.get(), "Login bem-sucedido"));
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(null, "Credenciais inválidas"));
-    }
-
-    @DeleteMapping("/usuarios/{id}")
-    public ResponseEntity<String> removerUsuario(@PathVariable("id") int id) {
-        Optional<Usuario> usuario = usuarioRepository.findById(id);
-
-        if (usuario.isPresent()) {
-            if ("FUNCIONARIO".equals(usuario.get().getPerfil()) &&
-                    usuarioRepository.findByPerfil("FUNCIONARIO").size() == 1) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não é possível remover o único funcionário");
-            }
-
-            usuarioRepository.deleteById(id);
-            return ResponseEntity.ok("Usuário removido com sucesso");
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-    }
-
-    private boolean verificarSenha(String senhaDigitada, String senhaArmazenada) {
-        return criptografarSenha(senhaDigitada).equals(senhaArmazenada);
-    }
-
-    private String criptografarSenha(String senha) {
+    /**
+     * Endpoint para cadastro de novo usuário.
+     * 
+     * @param usuarioDTO Dados do usuário
+     * @param senha      Senha simples fornecida pelo usuário
+     * @return Resposta HTTP com status de sucesso ou falha
+     */
+    @PostMapping("/cadastro")
+    public ResponseEntity<String> cadastrar(@RequestBody UsuarioDTO usuarioDTO, @RequestParam String senha) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(senha.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(hash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Erro ao criptografar senha", e);
+            // Salvar o usuário com a senha criptografada
+            usuarioService.salvar(usuarioDTO, senha);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao cadastrar usuário: " + e.getMessage());
         }
     }
 
-    private String gerarSenhaAleatoria() {
-        return String.format("%04d", new Random().nextInt(10000));
+    /**
+     * Endpoint para buscar usuário por ID.
+     * 
+     * @param id ID do usuário
+     * @return Resposta HTTP com o usuário encontrado ou erro 404
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioEntity> findById(@PathVariable Long id) {
+        Optional<UsuarioEntity> usuario = usuarioService.findById(id);
+        return usuario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    
+    /**
+     * Endpoint para buscar usuário por e-mail.
+     * 
+     * @param email E-mail do usuário
+     * @return Resposta HTTP com o usuário encontrado ou erro 404
+     */
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UsuarioEntity> buscarPorEmail(@PathVariable String email) {
+        Optional<UsuarioEntity> usuario = usuarioService.buscarPorEmail(email);
+        return usuario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    /**
+     * Endpoint para atualizar dados do usuário.
+     * 
+     * @param id         ID do usuário
+     * @param usuarioDTO Dados do usuário para atualização
+     * @return Resposta HTTP com status de sucesso ou falha
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<String> atualizar(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
+        try {
+            usuarioService.atualizar(id, usuarioDTO);
+            return ResponseEntity.ok("Usuário atualizado com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao atualizar usuário: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Endpoint para excluir usuário.
+     * 
+     * @param id ID do usuário a ser excluído
+     * @return Resposta HTTP com status de sucesso ou falha
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> excluir(@PathVariable Long id) {
+        try {
+            usuarioService.excluir(id);
+            return ResponseEntity.ok("Usuário excluído com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao excluir usuário: " + e.getMessage());
+        }
+    }
 }
