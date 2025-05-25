@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "VilleverbesApplication",
+            "request": "launch",
+            "mainClass": "br.net.villeverbes.VilleverbesApplication",
+            "projectName": ""
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-VilleverbesApplication<villeverbes>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
