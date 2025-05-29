@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,7 +21,9 @@ public class UsuarioService {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    // Método privado genérico para salvar usuário com perfil e senha
+    /**
+     * Método genérico para salvar usuário com perfil e senha (já criptografada)
+     */
     @Transactional
     private UsuarioEntity salvarUsuarioComPerfil(UsuarioDTO dto, String senha, String perfil) {
         if (dto.getNome() == null || dto.getEmail() == null) {
@@ -53,14 +56,21 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    // Salvar jogador com senha gerada automaticamente
-    @Transactional
-    public UsuarioEntity salvarJogador(UsuarioDTO dto) {
-        String senhaTemporaria = gerarSenhaTemporaria();
-        return salvarUsuarioComPerfil(dto, senhaTemporaria, "JOGADOR");
+    /**
+     * Salva jogador com senha gerada aleatoriamente
+     */
+  @Transactional
+public UsuarioEntity salvarJogador(UsuarioDTO dto) {
+    if (dto.getSenha() == null || dto.getSenha().isEmpty()) {
+        throw new IllegalArgumentException("Senha para jogador é obrigatória");
     }
+    return salvarUsuarioComPerfil(dto, dto.getSenha(), "JOGADOR");
+}
 
-    // Salvar colaborador com senha fornecida
+
+    /**
+     * Salva colaborador com senha fornecida no DTO
+     */
     @Transactional
     public UsuarioEntity salvarColaborador(UsuarioDTO dto) {
         if (dto.getSenha() == null || dto.getSenha().isEmpty()) {
@@ -69,17 +79,17 @@ public class UsuarioService {
         return salvarUsuarioComPerfil(dto, dto.getSenha(), "COLABORADOR");
     }
 
-    // Buscar por e-mail
     public Optional<UsuarioEntity> buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
 
-    // Buscar por ID
     public Optional<UsuarioEntity> findById(Long id) {
         return usuarioRepository.findById(id);
     }
 
-    // Atualizar usuário
+    /**
+     * Atualiza dados de um usuário, incluindo a senha se fornecida
+     */
     @Transactional
     public UsuarioEntity atualizar(Long id, UsuarioDTO dto) {
         Optional<UsuarioEntity> usuarioOptional = usuarioRepository.findById(id);
@@ -109,7 +119,6 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    // Excluir usuário
     @Transactional
     public void excluir(Long id) {
         if (!usuarioRepository.existsById(id)) {
@@ -118,25 +127,22 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    // Geração simples de senha temporária
+    /**
+     * Gera uma senha temporária de 6 dígitos numéricos aleatórios
+     */
     private String gerarSenhaTemporaria() {
-        return "senha123"; // Pode trocar por SecureRandom se quiser
+        SecureRandom random = new SecureRandom();
+        int numero = random.nextInt(900000) + 100000; // entre 100000 e 999999
+        return String.valueOf(numero);
     }
 
-
-
-    //public List<UsuarioEntity> listarColaboradores() {
-    //    return usuarioRepository.findByPerfil("COLABORADOR");
-   // }
-    
+    /**
+     * Lista colaboradores convertidos para DTO
+     */
     public List<UsuarioDTO> listarColaboradores() {
-    return usuarioRepository.findByPerfil("COLABORADOR")
-            .stream()
-            .map(UsuarioDTO::new)
-            .collect(Collectors.toList());
+        return usuarioRepository.findByPerfil("COLABORADOR")
+                .stream()
+                .map(UsuarioDTO::new)
+                .collect(Collectors.toList());
+    }
 }
-
-    
-}
-
-

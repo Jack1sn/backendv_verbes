@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/")
 @CrossOrigin(origins = "http://localhost:4200")
 public class UsuarioController {
 
@@ -30,38 +30,39 @@ public class UsuarioController {
      * AutoCadastro de Jogador - senha gerada e enviada por email
      */
     @PostMapping("jogador/autocadastro")
-    public ResponseEntity<?> autoCadastro(@RequestBody UsuarioDTO usuarioDTO) {
-        try {
-            Optional<UsuarioEntity> existente = usuarioService.buscarPorEmail(usuarioDTO.getEmail());
-            if (existente.isPresent()) {
-                return ResponseEntity
-                        .status(HttpStatus.CONFLICT)
-                        .body(Map.of("error", "E-mail já cadastrado"));
-            }
-
-            String senhaGerada = gerarSenhaAleatoria();
-
-            UsuarioEntity usuarioSalvo = usuarioService.salvarJogador(usuarioDTO);
-
-            // Enviar e-mail com senha temporária para o usuário
-            emailService.sendEmail(usuarioSalvo.getEmail(), "Cadastro realizado com sucesso",
-                    "Olá " + usuarioSalvo.getNome() + ", sua senha é: " + senhaGerada);
-
+public ResponseEntity<?> autoCadastro(@RequestBody UsuarioDTO usuarioDTO) {
+    try {
+        Optional<UsuarioEntity> existente = usuarioService.buscarPorEmail(usuarioDTO.getEmail());
+        if (existente.isPresent()) {
             return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(Map.of("message", "Jogador cadastrado com sucesso! Senha enviada por email."));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("error", "Erro ao cadastrar jogador: " + e.getMessage()));
+                    .status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "E-mail já cadastrado"));
         }
+
+        String senhaGerada = gerarSenhaAleatoria();
+        usuarioDTO.setSenha(senhaGerada);  // define a senha no DTO
+
+        UsuarioEntity usuarioSalvo = usuarioService.salvarJogador(usuarioDTO);
+
+        // Enviar e-mail com senha temporária para o usuário
+        emailService.sendEmail(usuarioSalvo.getEmail(), "Cadastro realizado com sucesso",
+                "Olá " + usuarioSalvo.getNome() + ", sua senha é: " + senhaGerada);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(Map.of("message", "Jogador cadastrado com sucesso! Senha enviada por email."));
+    } catch (Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", "Erro ao cadastrar jogador: " + e.getMessage()));
     }
+}
+
 
     /**
-     * Endpoint para cadastrar um novo colaborador.
-     * Valida se o e-mail já está em uso antes de persistir o colaborador.
+     * Cadastrar colaborador
      */
-    @PostMapping("/colaborador")
+    @PostMapping("usuario/colaborador")
     public ResponseEntity<?> cadastrarColaborador(@RequestBody UsuarioDTO usuarioDTO) {
         try {
             Optional<UsuarioEntity> existente = usuarioService.buscarPorEmail(usuarioDTO.getEmail());
@@ -72,7 +73,6 @@ public class UsuarioController {
             }
 
             UsuarioEntity usuarioSalvo = usuarioService.salvarColaborador(usuarioDTO);
-
             UsuarioDTO respostaDTO = new UsuarioDTO(usuarioSalvo);
 
             URI location = URI.create("/usuarios/" + usuarioSalvo.getId());
@@ -80,8 +80,8 @@ public class UsuarioController {
             return ResponseEntity
                     .created(location)
                     .body(Map.of(
-                        "message", "Colaborador cadastrado com sucesso!",
-                        "usuario", respostaDTO
+                            "message", "Colaborador cadastrado com sucesso!",
+                            "usuario", respostaDTO
                     ));
         } catch (Exception e) {
             return ResponseEntity
@@ -91,18 +91,18 @@ public class UsuarioController {
     }
 
     /**
-     * Gera uma senha aleatória de 4 dígitos (pode melhorar para mais complexidade)
+     * Gera senha aleatória de 6 dígitos
      */
     private String gerarSenhaAleatoria() {
         SecureRandom random = new SecureRandom();
-        int numero = random.nextInt(9000) + 1000; // número entre 1000 e 9999
+        int numero = random.nextInt(900000) + 100000; // 6 dígitos
         return String.valueOf(numero);
     }
 
     /**
-     * Endpoint para listar todos os colaboradores.
+     * Listar colaboradores
      */
-    @GetMapping("/colaboradores")
+    @GetMapping("usuario/colaboradores")
     public ResponseEntity<?> listarColaboradores() {
         try {
             List<UsuarioDTO> colaboradores = usuarioService.listarColaboradores();
@@ -115,13 +115,11 @@ public class UsuarioController {
     }
 
     /**
-     * Endpoint para excluir um colaborador pelo ID.
-     * Agora sem autenticação, será público.
+     * Excluir colaborador por ID
      */
-    @DeleteMapping("/colaboradores/{id}")
+    @DeleteMapping("usuario/colaboradores/{id}")
     public ResponseEntity<?> excluirColaborador(@PathVariable Long id) {
         try {
-            // Verifica se o colaborador existe
             Optional<UsuarioEntity> colaboradorExistente = usuarioService.findById(id);
             if (!colaboradorExistente.isPresent()) {
                 return ResponseEntity
@@ -129,7 +127,6 @@ public class UsuarioController {
                         .body(Map.of("error", "Colaborador não encontrado"));
             }
 
-            // Exclui o colaborador
             usuarioService.excluir(id);
             return ResponseEntity
                     .status(HttpStatus.NO_CONTENT)
@@ -142,10 +139,9 @@ public class UsuarioController {
     }
 
     /**
-     * Endpoint para atualizar os dados de um colaborador.
-     * Sem autenticação, será público.
+     * Atualizar colaborador
      */
-    @PutMapping("/colaboradores/{id}")
+    @PutMapping("usuario/colaboradores/{id}")
     public ResponseEntity<?> atualizarColaborador(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
         try {
             Optional<UsuarioEntity> colaboradorExistente = usuarioService.findById(id);
@@ -156,8 +152,8 @@ public class UsuarioController {
             }
 
             UsuarioEntity colaboradorAtualizado = usuarioService.atualizar(id, usuarioDTO);
-
             UsuarioDTO respostaDTO = new UsuarioDTO(colaboradorAtualizado);
+
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(Map.of("message", "Colaborador atualizado com sucesso", "usuario", respostaDTO));
