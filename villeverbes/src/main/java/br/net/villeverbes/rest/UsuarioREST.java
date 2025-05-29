@@ -1,5 +1,7 @@
 package br.net.villeverbes.rest;
 
+
+
 import br.net.villeverbes.dto.UsuarioDTO;
 import br.net.villeverbes.entity.UsuarioEntity;
 import br.net.villeverbes.service.UsuarioService;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:4200") // Permite chamadas da aplicação Angular
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioREST {
@@ -19,22 +21,32 @@ public class UsuarioREST {
     private UsuarioService usuarioService;
 
     /**
-     * Endpoint para cadastro de novo usuário.
-     * 
-     * @param usuarioDTO Dados do usuário
-     * @param senha      Senha simples fornecida pelo usuário
-     * @return Resposta HTTP com status de sucesso ou falha
+     * Cadastro de Jogador - senha é gerada internamente
      */
     @PostMapping("/cadastro")
-    public ResponseEntity<String> cadastrar(@RequestBody UsuarioDTO usuarioDTO, @RequestParam String senha) {
+    public ResponseEntity<String> cadastrarJogador(@RequestBody UsuarioDTO usuarioDTO) {
         try {
-            // Salvar o usuário com a senha criptografada
-            usuarioService.salvar(usuarioDTO, senha);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso!");
+            usuarioService.salvarJogador(usuarioDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Jogador cadastrado com sucesso!");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao cadastrar usuário: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao cadastrar jogador: " + e.getMessage());
         }
     }
+
+    /**
+     * Cadastro de Colaborador - senha vem no DTO
+     */
+    @PostMapping("/colaboradores")
+    public ResponseEntity<String> cadastrarColaborador(@RequestBody UsuarioDTO usuarioDTO) {
+        try {
+            usuarioService.salvarColaborador(usuarioDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Colaborador cadastrado com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao cadastrar colaborador: " + e.getMessage());
+        }
+    }
+
+
 
     /**
      * Endpoint para buscar usuário por ID.

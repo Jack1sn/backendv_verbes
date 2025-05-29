@@ -27,7 +27,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login", "/auth/enviar-senha", "/jogador/autocadastro").permitAll()
+                .requestMatchers("/auth/login", "/email/simples","/auth/enviar-senha", "/ajuda-emails" ,
+                 "/jogador/autocadastro","/usuario/colaborador", "/usuario/colaboradores/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)

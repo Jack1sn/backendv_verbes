@@ -26,11 +26,11 @@ public class UserDetailService implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 usuario.getEmail(),
-                usuario.getSenha(),  // Senha já deve estar criptografada
-                true,  // enabled
-                true,  // accountNonExpired
-                true,  // credentialsNonExpired
-                true,  // accountNonLocked
+                usuario.getSenha(),  // Senha  criptografada
+                true,  
+                true,  
+              true,  
+                true,  
                 List.of(new SimpleGrantedAuthority(role))
         );
     }

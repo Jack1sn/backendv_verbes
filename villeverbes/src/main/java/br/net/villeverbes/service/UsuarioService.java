@@ -3,13 +3,14 @@ package br.net.villeverbes.service;
 import br.net.villeverbes.dto.UsuarioDTO;
 import br.net.villeverbes.entity.UsuarioEntity;
 import br.net.villeverbes.repository.UsuarioRepository;
-
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -19,37 +20,24 @@ public class UsuarioService {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    /**
-     * Salva os dados do usuário.
-     * 
-     * @param dto          Dados do usuário
-     * @param senhaSimples Senha temporária a ser criptografada
-     * @return UsuarioEntity salvo
-     */
+    // Método privado genérico para salvar usuário com perfil e senha
     @Transactional
-    public UsuarioEntity salvar(UsuarioDTO dto, String senhaSimples) {
-        try{ 
-        System.out.println("Iniciando salvar  o usuário... " );
-        // 1. Verificações básicas (pode-se evoluir para validações customizadas)
-        if (dto.getNome() == null || dto.getEmail() == null || dto.getPerfil() == null) {
-            throw new IllegalArgumentException("Nome, e-mail e perfil são obrigatórios");
+    private UsuarioEntity salvarUsuarioComPerfil(UsuarioDTO dto, String senha, String perfil) {
+        if (dto.getNome() == null || dto.getEmail() == null) {
+            throw new IllegalArgumentException("Nome e e-mail são obrigatórios");
         }
 
-        // 2. Verificar se o e-mail já está cadastrado
-        Optional<UsuarioEntity> usuarioExistente = usuarioRepository.findByEmail(dto.getEmail());
-        if (usuarioExistente.isPresent()) {
+        if (usuarioRepository.findByEmail(dto.getEmail()).isPresent()) {
             throw new IllegalArgumentException("E-mail já cadastrado");
         }
 
-        // 3. Criptografar a senha
-        String senhaCriptografada = passwordEncoder.encode(senhaSimples);
+        String senhaCriptografada = passwordEncoder.encode(senha);
 
-        // 4. Criar o usuário
         UsuarioEntity usuario = new UsuarioEntity();
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
         usuario.setSenha(senhaCriptografada);
-        usuario.setPerfil(dto.getPerfil()); // O perfil pode ser "JOGADOR", "GERENTE", etc.
+        usuario.setPerfil(perfil);
         usuario.setDataNascimento(dto.getDataNascimento());
         usuario.setCpf(dto.getCpf());
         usuario.setTelefone(dto.getTelefone());
@@ -60,39 +48,38 @@ public class UsuarioService {
         usuario.setBairro(dto.getBairro());
         usuario.setCidade(dto.getCidade());
         usuario.setEstado(dto.getEstado());
-        usuario.setLogin(dto.getEmail()); // Pode ser usado para login
+        usuario.setLogin(dto.getEmail());
 
-        //5. Salvar usuário no banco
-        UsuarioEntity usuarioSalvo = usuarioRepository.save(usuario);
-        System.out.println("Usuário " + dto.getNome() + " salvo com sucesso!");
-        return usuarioSalvo;
-
-    } catch (Exception e) {
-        // Log de erro
-        System.err.println("Erro ao salvar o usuário: " + e.getMessage());
-        e.printStackTrace(); // Opcional: imprime o stack trace completo
-        throw new RuntimeException("Erro ao salvar o usuário", e); // Lança uma exceção para ser tratada em outro lugar
+        return usuarioRepository.save(usuario);
     }
-    
-}
 
-    /**
-     * Verifica se o e-mail já está cadastrado no banco.
-     * 
-     * @param email E-mail a ser verificado
-     * @return Optional<UsuarioEntity> Se o e-mail já estiver cadastrado, retorna um usuário
-     */
+    // Salvar jogador com senha gerada automaticamente
+    @Transactional
+    public UsuarioEntity salvarJogador(UsuarioDTO dto) {
+        String senhaTemporaria = gerarSenhaTemporaria();
+        return salvarUsuarioComPerfil(dto, senhaTemporaria, "JOGADOR");
+    }
+
+    // Salvar colaborador com senha fornecida
+    @Transactional
+    public UsuarioEntity salvarColaborador(UsuarioDTO dto) {
+        if (dto.getSenha() == null || dto.getSenha().isEmpty()) {
+            throw new IllegalArgumentException("Senha para colaborador é obrigatória");
+        }
+        return salvarUsuarioComPerfil(dto, dto.getSenha(), "COLABORADOR");
+    }
+
+    // Buscar por e-mail
     public Optional<UsuarioEntity> buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
 
-    /**
-     * Atualiza os dados de um usuário.
-     * 
-     * @param id  ID do usuário a ser atualizado
-     * @param dto Dados atualizados do usuário
-     * @return UsuarioEntity Atualizado
-     */
+    // Buscar por ID
+    public Optional<UsuarioEntity> findById(Long id) {
+        return usuarioRepository.findById(id);
+    }
+
+    // Atualizar usuário
     @Transactional
     public UsuarioEntity atualizar(Long id, UsuarioDTO dto) {
         Optional<UsuarioEntity> usuarioOptional = usuarioRepository.findById(id);
@@ -116,34 +103,40 @@ public class UsuarioService {
         usuario.setEstado(dto.getEstado());
 
         if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
-            usuario.setSenha(passwordEncoder.encode(dto.getSenha())); // Atualizar senha
+            usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
         }
-   
+
         return usuarioRepository.save(usuario);
     }
 
-    /**
-     * Exclui um usuário pelo ID.
-     * 
-     * @param id ID do usuário a ser excluído
-     */
+    // Excluir usuário
     @Transactional
     public void excluir(Long id) {
-        Optional<UsuarioEntity> usuario = usuarioRepository.findById(id);
-        if (usuario.isPresent()) {
-            usuarioRepository.deleteById(id);
-        } else {
+        if (!usuarioRepository.existsById(id)) {
             throw new IllegalArgumentException("Usuário não encontrado");
         }
+        usuarioRepository.deleteById(id);
     }
 
-    /**
-     * Busca um usuário pelo ID.
-     * 
-     * @param id ID do usuário a ser buscado
-     * @return Optional<UsuarioEntity> Se o usuário for encontrado, retorna o usuário
-     */
-    public Optional<UsuarioEntity> findById(Long id) {
-        return usuarioRepository.findById(id);
+    // Geração simples de senha temporária
+    private String gerarSenhaTemporaria() {
+        return "senha123"; // Pode trocar por SecureRandom se quiser
     }
+
+
+
+    //public List<UsuarioEntity> listarColaboradores() {
+    //    return usuarioRepository.findByPerfil("COLABORADOR");
+   // }
+    
+    public List<UsuarioDTO> listarColaboradores() {
+    return usuarioRepository.findByPerfil("COLABORADOR")
+            .stream()
+            .map(UsuarioDTO::new)
+            .collect(Collectors.toList());
 }
+
+    
+}
+
+

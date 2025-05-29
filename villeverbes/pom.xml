@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.4</version>
+        <version>3.4.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>br.net</groupId>
@@ -59,8 +59,7 @@
         <!-- Dependência do Semrvlet Jakarta (substituindo javax.servlet) -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>5.0.0</version> <!-- Versão mais recente -->
+            <artifactId>jakarta.servlet-api</artifactId> <!-- Versão mais recente -->
             <scope>provided</scope>
         </dependency>
 
