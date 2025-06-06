@@ -17,24 +17,33 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Filtro que intercepta as requisições para verificar e autenticar o token JWT.
- */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    // Chave secreta usada para assinar/verificar o JWT
     private static final String SECRET_KEY = "meusegredoaqui";
 
-    // Rotas públicas que não exigem autenticação
-    private static final List<String> PUBLIC_PATHS = List.of(
-        "/auth/login",
-        "/auth/enviar-senha",
-        "/jogador/autocadastro",
-        "/email/simples",
-        "/ajuda-emails",
-        "/admin/colaboradores",
-        "/usuario/colaboradores",
-        "/usuario/colaborador"
+    // Lista de rotas públicas, mapeando método + path
+    private static final List<PublicEndpoint> PUBLIC_ENDPOINTS = List.of(
+        new PublicEndpoint("POST", "/auth/login"),
+        new PublicEndpoint("POST", "/auth/enviar-senha"),
+        new PublicEndpoint("POST", "/jogador/autocadastro"),
+        new PublicEndpoint("POST", "/email/simples"),
+        new PublicEndpoint("GET", "/ajuda-emails"),
+          new PublicEndpoint("POST", "/ajuda-emails"),
+        new PublicEndpoint("GET", "/admin/colaboradores"),
+        new PublicEndpoint("GET", "/usuario/colaboradores"),
+        new PublicEndpoint("GET", "/usuario/colaborador"),
+        new PublicEndpoint("GET", "/api/frases-casa"),
+        //new PublicEndpoint("POST", "/api/frases-casa"),
+        //new PublicEndpoint("GET", "/api/frases-casa/"), // pra caso venha com /
+        //new PublicEndpoint("GET", "/api/frases-casa/**"),
+        new PublicEndpoint("GET", "/api/pronomes"),
+        new PublicEndpoint("GET", "/api/verbos"),
+        new PublicEndpoint("GET", "/api/tempos"),
+        new PublicEndpoint("GET", "/api/complementos"),
+        new PublicEndpoint("POST", "/api/pronomes"),
+        new PublicEndpoint("POST", "/api/verbos"),
+        new PublicEndpoint("POST", "/api/tempos"),
+        new PublicEndpoint("POST", "/api/complementos")
     );
 
     @Override
@@ -43,67 +52,71 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getRequestURI();
+        String method = request.getMethod();
 
-        // Se for uma rota pública, segue a requisição normalmente
-        if (isPublicPath(path)) {
+        // Verifica se rota + método são públicos (não precisam de token)
+        if (isPublicEndpoint(method, path)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Recupera o token do cabeçalho Authorization
+        // Pega o token do header Authorization
         String token = request.getHeader("Authorization");
-
         if (token == null || !token.startsWith("Bearer ")) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token JWT não encontrado ou inválido");
             return;
         }
 
         try {
-            // Remove o prefixo "Bearer "
             String jwt = token.substring(7);
 
-            // Cria o verificador de token com a chave secreta
             JWTVerifier verifier = JWT.require(com.auth0.jwt.algorithms.Algorithm.HMAC256(SECRET_KEY))
-                .withIssuer("SeuIssuerAqui")  // Se você usar um "issuer" (facultativo)
-                .build();
-            
-            // Verifica o token JWT
+                    .withIssuer("villeverbesAPI")
+                    .build();
+
             DecodedJWT decodedJWT = verifier.verify(jwt);
 
-            // Verifica se o token expirou
             if (decodedJWT.getExpiresAt().before(new Date())) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado");
                 return;
             }
 
-            // Recupera o "subject" (usuário) do token
             String username = decodedJWT.getSubject();
 
-            // Cria o token de autenticação
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(username, null, null);
 
-            // Adiciona os detalhes da requisição ao contexto de autenticação
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            // Define a autenticação no contexto de segurança do Spring
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
-            // Continua a cadeia de filtros
             filterChain.doFilter(request, response);
 
         } catch (JWTVerificationException e) {
-            // Captura o erro de verificação do JWT e retorna um erro adequado
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token JWT inválido: " + e.getMessage());
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Erro ao autenticar com o token JWT: " + e.getMessage());
         }
     }
 
-    /**
-     * Verifica se a requisição é para uma rota pública (que não exige autenticação).
-     */
-    private boolean isPublicPath(String path) {
-        return PUBLIC_PATHS.stream().anyMatch(path::startsWith);
+    private boolean isPublicEndpoint(String method, String path) {
+        return PUBLIC_ENDPOINTS.stream().anyMatch(endpoint -> {
+            if (!endpoint.method.equalsIgnoreCase(method)) {
+                return false;
+            }
+            if (endpoint.path.endsWith("/**")) {
+                String basePath = endpoint.path.replace("/**", "");
+                return path.startsWith(basePath);
+            }
+            return endpoint.path.equals(path);
+        });
+    }
+
+    // Classe auxiliar para mapear método + path
+    private static class PublicEndpoint {
+        String method;
+        String path;
+
+        PublicEndpoint(String method, String path) {
+            this.method = method;
+            this.path = path;
+        }
     }
 }

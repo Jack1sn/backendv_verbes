@@ -2,6 +2,7 @@ package br.net.villeverbes.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,11 +16,10 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    private static final String SECRET_KEY = "meusegredoaqui";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,16 +27,42 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login", "/email/simples","/auth/enviar-senha", "/ajuda-emails" ,
-                 "/jogador/autocadastro","/usuario/colaborador", "/usuario/colaboradores/**").permitAll()
+                // Libera OPTIONS para CORS preflight
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // Libera GET para frases casa (API pública)
+                .requestMatchers(HttpMethod.GET, "/api/frases-casa", "/api/frases-casa/**").permitAll()
+
+                // Libera POST para frases casa (API pública)
+                //.requestMatchers(HttpMethod.POST, "/api/frases-casa").permitAll()
+                .requestMatchers(HttpMethod.POST, "/ajuda-emails").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/pronomes","/api/verbos",
+                "/api-tempos","/api/complementos").permitAll()
+                // Rotas públicas diversas
+                .requestMatchers(
+                    "/auth/login",
+                    "/auth/enviar-senha",
+                    "/jogador/autocadastro",
+                    "/email/simples",
+                    "/ajuda-emails",
+                    "/admin/colaboradores",
+                    "/usuario/colaboradores",
+                    "/usuario/colaborador",
+                    "/api/pronomes",
+                    "/api/verbos",
+                    "/api/tempos",
+                    "/api/complementos"
+                ).permitAll()
+
+                // Qualquer outra requisição precisa de autenticação
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .httpBasic(httpBasic -> {})
             .formLogin(form -> form.disable())
             .logout(logout -> logout.disable())
-            .exceptionHandling(exceptionHandling ->
-                exceptionHandling.authenticationEntryPoint((request, response, authException) -> {
+            .exceptionHandling(exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint((request, response, authException) -> {
                     response.sendError(401, "Usuário não autorizado. Por favor, forneça um token válido.");
                 })
             );

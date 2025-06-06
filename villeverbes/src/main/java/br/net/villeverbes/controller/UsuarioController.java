@@ -63,7 +63,10 @@ public ResponseEntity<?> autoCadastro(@RequestBody UsuarioDTO usuarioDTO) {
      * Cadastrar colaborador
      */
     @PostMapping("usuario/colaborador")
-    public ResponseEntity<?> cadastrarColaborador(@RequestBody UsuarioDTO usuarioDTO) {
+
+    public ResponseEntity<?> cadastrarColaborador(@RequestBody UsuarioDTO usuarioDTO)
+    
+    {
         try {
             Optional<UsuarioEntity> existente = usuarioService.buscarPorEmail(usuarioDTO.getEmail());
             if (existente.isPresent()) {

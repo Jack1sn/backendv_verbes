@@ -48,6 +48,7 @@ public class LoginController {
         // Gera o token JWT
         String token = JWT.create()
                 .withSubject(usuario.getEmail())
+                .withIssuer("villeverbesAPI") 
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(Algorithm.HMAC256(SECRET_KEY));
 
