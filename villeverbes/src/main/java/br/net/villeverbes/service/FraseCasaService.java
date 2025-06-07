@@ -39,25 +39,64 @@ public class FraseCasaService {
                 .map(this::toDTO);
     }
 
-    public FraseCasaDTO salvar(FraseCasaDTO dto) {
-        FraseAmbienteCasaEntity entity;
+  public FraseCasaDTO salvar(FraseCasaDTO dto) {
+    FraseAmbienteCasaEntity entity;
 
-        if (dto.getId() != null) {
-            entity = fraseRepo.findById(dto.getId())
-                    .orElseThrow(() -> new RuntimeException("Frase não encontrada para atualizar."));
-        } else {
-            entity = new FraseAmbienteCasaEntity();
-        }
-
-        entity.setPronome(pronomeRepo.findById(dto.getPronomeId()).orElseThrow());
-        entity.setVerboInfinitivo(verboRepo.findById(dto.getVerboInfinitivoId()).orElseThrow());
-        entity.setComplemento(complementoRepo.findById(dto.getComplementoId()).orElseThrow());
-        entity.setTempoVerbal(tempoRepo.findById(dto.getTempoVerbalId()).orElseThrow());
-        entity.setRespostaCorreta(dto.getRespostaCorreta());
-
-        FraseAmbienteCasaEntity saved = fraseRepo.save(entity);
-        return toDTO(saved);
+    if (dto.getId() != null) {
+        entity = fraseRepo.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Frase não encontrada para atualizar."));
+    } else {
+        entity = new FraseAmbienteCasaEntity();
     }
+
+    // ----------- PRONOME -----------
+    if (dto.getPronomeId() != null) {
+        entity.setPronome(pronomeRepo.findById(dto.getPronomeId()).orElseThrow());
+    } else if (dto.getPronomeTexto() != null) {
+        entity.setPronome(pronomeRepo.findByTexto(dto.getPronomeTexto())
+                .orElseThrow(() -> new RuntimeException("Pronome não encontrado: " + dto.getPronomeTexto())));
+    }
+
+    // ----------- VERBO -------------
+    if (dto.getVerboInfinitivoId() != null) {
+        entity.setVerboInfinitivo(verboRepo.findById(dto.getVerboInfinitivoId()).orElseThrow());
+    } else if (dto.getVerboTexto() != null) {
+        entity.setVerboInfinitivo(verboRepo.findByVerbo(dto.getVerboTexto())
+                .orElseThrow(() -> new RuntimeException("Verbo não encontrado: " + dto.getVerboTexto())));
+    }
+
+    // ----------- TEMPO VERBAL -----------
+    if (dto.getTempoVerbalId() != null) {
+        entity.setTempoVerbal(tempoRepo.findById(dto.getTempoVerbalId()).orElseThrow());
+    } else if (dto.getTempoVerbalTexto() != null) {
+        entity.setTempoVerbal(tempoRepo.findByTempo(dto.getTempoVerbalTexto())
+                .orElseThrow(() -> new RuntimeException("Tempo verbal não encontrado: " + dto.getTempoVerbalTexto())));
+    }
+
+    // ----------- COMPLEMENTO -----------
+    if (dto.getComplementoId() != null) {
+        entity.setComplemento(complementoRepo.findById(dto.getComplementoId()).orElseThrow());
+    } else if (dto.getComplementoDescricao() != null && !dto.getComplementoDescricao().isBlank()) {
+        // Verifica se já existe um complemento igual (evita duplicatas)
+        Optional<ComplementoEntity> existente = complementoRepo.findByDescricao(dto.getComplementoDescricao().trim());
+        ComplementoEntity complemento = existente.orElseGet(() -> {
+            ComplementoEntity novo = new ComplementoEntity();
+            novo.setDescricao(dto.getComplementoDescricao().trim());
+            return complementoRepo.save(novo);
+        });
+        entity.setComplemento(complemento);
+    } else {
+        throw new RuntimeException("Complemento é obrigatório.");
+    }
+
+    // ----------- RESPOSTA CORRETA -----------
+    entity.setRespostaCorreta(dto.getRespostaCorreta());
+
+    // ----------- SALVAR -----------
+    FraseAmbienteCasaEntity salvo = fraseRepo.save(entity);
+    return toDTO(salvo);
+}
+
 
     public void deletar(Long id) {
         if (!fraseRepo.existsById(id)) {
@@ -82,8 +121,9 @@ public class FraseCasaService {
         String complemento = entity.getComplemento().getDescricao(); // Ex: "une pomme"
         String pontuacao = entity.getRespostaCorreta(); // Ex: "."
 
-        String fraseMontada = String.format("(%s) [%s] _______ [%s] [%s]%s",
+        String fraseMontada = String.format("(%s) \n%s _______ [%s] %s %s",
                 tempo, pronome, verbo, complemento, pontuacao);
+                
 
         dto.setDescricaoMontada(fraseMontada);
         return dto;

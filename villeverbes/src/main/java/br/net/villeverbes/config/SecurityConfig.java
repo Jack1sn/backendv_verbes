@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,24 +22,26 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final UserDetailsService userDetailsService;
+
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                // Libera OPTIONS para CORS preflight
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                // Libera GET para frases casa (API pública)
                 .requestMatchers(HttpMethod.GET, "/api/frases-casa", "/api/frases-casa/**").permitAll()
-
-                // Libera POST para frases casa (API pública)
-                //.requestMatchers(HttpMethod.POST, "/api/frases-casa").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/frases-casa").authenticated()
                 .requestMatchers(HttpMethod.POST, "/ajuda-emails").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/pronomes","/api/verbos",
-                "/api-tempos","/api/complementos").permitAll()
-                // Rotas públicas diversas
+                .requestMatchers("/usuario/colaborador").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/usuario/colaborador").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/usuario/colaboradores").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/pronomes", "/api/verbos", "/api-tempos", "/api/complementos").permitAll()
                 .requestMatchers(
                     "/auth/login",
                     "/auth/enviar-senha",
@@ -53,8 +56,6 @@ public class SecurityConfig {
                     "/api/tempos",
                     "/api/complementos"
                 ).permitAll()
-
-                // Qualquer outra requisição precisa de autenticação
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -72,7 +73,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
+        return new JwtAuthenticationFilter(userDetailsService);
     }
 
     @Bean

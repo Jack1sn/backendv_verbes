@@ -120,6 +120,7 @@ public ResponseEntity<?> autoCadastro(@RequestBody UsuarioDTO usuarioDTO) {
     /**
      * Excluir colaborador por ID
      */
+    
     @DeleteMapping("usuario/colaboradores/{id}")
     public ResponseEntity<?> excluirColaborador(@PathVariable Long id) {
         try {

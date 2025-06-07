@@ -2,15 +2,25 @@ package br.net.villeverbes.dto;
 
 public class FraseCasaDTO {
     private Long id;
+
+    // IDs usados para operações diretas com registros existentes
     private Long pronomeId;
     private Long verboInfinitivoId;
     private Long complementoId;
     private Long tempoVerbalId;
+
+    // Textos usados para facilitar criação via frontend
+    private String pronomeTexto;
+    private String verboTexto;
+    private String tempoVerbalTexto;
+    private String complementoDescricao;
+
+    // Outros campos
     private String respostaCorreta;
-    private String descricaoMontada; // Frase montada
-    private String complementoDescricao; // NOVO: usado ao digitar um complemento novo
+    private String descricaoMontada;
 
     // Getters e Setters
+
     public Long getId() {
         return id;
     }
@@ -51,6 +61,38 @@ public class FraseCasaDTO {
         this.tempoVerbalId = tempoVerbalId;
     }
 
+    public String getPronomeTexto() {
+        return pronomeTexto;
+    }
+
+    public void setPronomeTexto(String pronomeTexto) {
+        this.pronomeTexto = pronomeTexto;
+    }
+
+    public String getVerboTexto() {
+        return verboTexto;
+    }
+
+    public void setVerboTexto(String verboTexto) {
+        this.verboTexto = verboTexto;
+    }
+
+    public String getTempoVerbalTexto() {
+        return tempoVerbalTexto;
+    }
+
+    public void setTempoVerbalTexto(String tempoVerbalTexto) {
+        this.tempoVerbalTexto = tempoVerbalTexto;
+    }
+
+    public String getComplementoDescricao() {
+        return complementoDescricao;
+    }
+
+    public void setComplementoDescricao(String complementoDescricao) {
+        this.complementoDescricao = complementoDescricao;
+    }
+
     public String getRespostaCorreta() {
         return respostaCorreta;
     }
@@ -65,13 +107,5 @@ public class FraseCasaDTO {
 
     public void setDescricaoMontada(String descricaoMontada) {
         this.descricaoMontada = descricaoMontada;
-    }
-
-    public String getComplementoDescricao() {
-        return complementoDescricao;
-    }
-
-    public void setComplementoDescricao(String complementoDescricao) {
-        this.complementoDescricao = complementoDescricao;
     }
 }
