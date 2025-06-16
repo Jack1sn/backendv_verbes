@@ -29,9 +29,12 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
     // Buscar por login (caso use login separado do e-mail)
     Optional<UsuarioEntity> findByLogin(String login);
 
+
     // Buscar usuário ativo por e-mail (caso tenha campo ativo no banco futuramente)
     // Optional<UsuarioEntity> findByEmailAndAtivoTrue(String email);
 
-    
+    // Correto: retorna jogadores ativos
+        List<UsuarioEntity> findByPerfilAndAtivoTrue(String perfil);
+
 
 }

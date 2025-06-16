@@ -113,7 +113,12 @@ public class DBInitializer {
                         new TempoVerbalEntity("Présent"),
                         new TempoVerbalEntity("Passé Composé"),
                         new TempoVerbalEntity("Imparfait"),
-                        new TempoVerbalEntity("Futur Simple")
+                        new TempoVerbalEntity("Futur Simple"),
+                        new TempoVerbalEntity("Futur Proche"),
+                        new TempoVerbalEntity("Passé Simple"),
+
+                        new TempoVerbalEntity("Conditionnnel")
+                        
                 ));
             }
 

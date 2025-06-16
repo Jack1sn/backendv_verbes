@@ -167,4 +167,49 @@ public ResponseEntity<?> autoCadastro(@RequestBody UsuarioDTO usuarioDTO) {
                     .body(Map.of("error", "Erro ao atualizar colaborador: " + e.getMessage()));
         }
     }
+
+    /**
+ * Listar todos os jogadores ativos
+ */
+@GetMapping("usuario/jogadores")
+public ResponseEntity<?> listarJogadores() {
+    try {
+        List<UsuarioDTO> jogadores = usuarioService.listarJogadores();
+        return ResponseEntity.ok(jogadores);
+    } catch (Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Erro ao buscar jogadores: " + e.getMessage()));
+    }
+}
+/**
+ * Bloquear ou desbloquear jogador
+ */
+@PutMapping("usuario/jogadores/{id}/ativo")
+public ResponseEntity<?> atualizarStatusJogador(
+        @PathVariable Long id,
+        @RequestParam boolean ativo
+) {
+    try {
+        Optional<UsuarioEntity> jogadorOptional = usuarioService.findById(id);
+        if (jogadorOptional.isEmpty() || !"JOGADOR".equals(jogadorOptional.get().getPerfil())) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Jogador não encontrado"));
+        }
+
+        UsuarioEntity jogador = jogadorOptional.get();
+        jogador.setAtivo(ativo);
+        usuarioService.atualizar(id, new UsuarioDTO(jogador)); // Atualiza com base no DTO
+        return ResponseEntity.ok(Map.of(
+                "message", ativo ? "Jogador desbloqueado com sucesso" : "Jogador bloqueado com sucesso"
+        ));
+    } catch (Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Erro ao atualizar status do jogador: " + e.getMessage()));
+    }
+}
+
+
 }

@@ -26,6 +26,7 @@ public class UsuarioDTO {
     private String cidade;
     private String estado;
     private String login;
+    private boolean ativo;
 
     public UsuarioDTO() {}
 
@@ -47,6 +48,7 @@ public class UsuarioDTO {
         this.cidade = usuarioEntity.getCidade();
         this.estado = usuarioEntity.getEstado();
         this.login = usuarioEntity.getLogin();
+         this.ativo = usuarioEntity.isAtivo();
     }
 
     // Getters e Setters

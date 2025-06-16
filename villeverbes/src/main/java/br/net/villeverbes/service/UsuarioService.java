@@ -26,6 +26,8 @@ public class UsuarioService {
      */
     @Transactional
     private UsuarioEntity salvarUsuarioComPerfil(UsuarioDTO dto, String senha, String perfil) {
+
+      
         if (dto.getNome() == null || dto.getEmail() == null) {
             throw new IllegalArgumentException("Nome e e-mail são obrigatórios");
         }
@@ -52,6 +54,8 @@ public class UsuarioService {
         usuario.setCidade(dto.getCidade());
         usuario.setEstado(dto.getEstado());
         usuario.setLogin(dto.getEmail());
+         usuario.setAtivo(true);
+        
 
         return usuarioRepository.save(usuario);
     }
@@ -61,9 +65,11 @@ public class UsuarioService {
      */
   @Transactional
 public UsuarioEntity salvarJogador(UsuarioDTO dto) {
+    
     if (dto.getSenha() == null || dto.getSenha().isEmpty()) {
         throw new IllegalArgumentException("Senha para jogador é obrigatória");
     }
+    
     return salvarUsuarioComPerfil(dto, dto.getSenha(), "JOGADOR");
 }
 
@@ -111,6 +117,7 @@ public UsuarioEntity salvarJogador(UsuarioDTO dto) {
         usuario.setBairro(dto.getBairro());
         usuario.setCidade(dto.getCidade());
         usuario.setEstado(dto.getEstado());
+        
 
         if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
             usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
@@ -145,4 +152,33 @@ public UsuarioEntity salvarJogador(UsuarioDTO dto) {
                 .map(UsuarioDTO::new)
                 .collect(Collectors.toList());
     }
+
+    public List<UsuarioDTO> listarJogadores() {
+    return usuarioRepository.findByPerfil("JOGADOR").stream()
+            .filter(UsuarioEntity::isAtivo)
+            .map(UsuarioDTO::new)
+            .collect(Collectors.toList());
+}
+
+@Transactional
+public void bloquearJogador(Long id) {
+    UsuarioEntity jogador = usuarioRepository.findById(id)
+        .filter(u -> "JOGADOR".equalsIgnoreCase(u.getPerfil()))
+        .orElseThrow(() -> new IllegalArgumentException("Jogador não encontrado"));
+
+    jogador.setAtivo(false);
+    usuarioRepository.save(jogador);
+}
+
+@Transactional
+public void desbloquearJogador(Long id) {
+    UsuarioEntity jogador = usuarioRepository.findById(id)
+        .filter(u -> "JOGADOR".equalsIgnoreCase(u.getPerfil()))
+        .orElseThrow(() -> new IllegalArgumentException("Jogador não encontrado"));
+
+    jogador.setAtivo(true);
+    usuarioRepository.save(jogador);
+}
+
+
 }

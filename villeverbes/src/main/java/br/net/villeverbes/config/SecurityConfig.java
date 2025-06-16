@@ -37,20 +37,25 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/frases-casa", "/api/frases-casa/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/frases-casa").authenticated()
-                .requestMatchers(HttpMethod.POST, "/ajuda-emails").permitAll()
+                .requestMatchers(HttpMethod.POST, "/ajuda").permitAll()
                 .requestMatchers("/usuario/colaborador").permitAll()
+                  .requestMatchers(HttpMethod.GET, "/ajuda/tem-nova-mensagem").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/usuario/colaborador").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/usuario/colaboradores").permitAll()
+                 .requestMatchers(HttpMethod.PUT, "/usuario/colaboradores").permitAll()
+                  .requestMatchers(HttpMethod.PUT, "/usuario/jogadores").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/pronomes", "/api/verbos", "/api-tempos", "/api/complementos").permitAll()
                 .requestMatchers(
                     "/auth/login",
                     "/auth/enviar-senha",
                     "/jogador/autocadastro",
                     "/email/simples",
-                    "/ajuda-emails",
+                    "/ajuda",
                     "/admin/colaboradores",
                     "/usuario/colaboradores",
                     "/usuario/colaborador",
+                     "/usuario/jogadores",
+                     "/usuario/jogadores/**",
                     "/api/pronomes",
                     "/api/verbos",
                     "/api/tempos",
