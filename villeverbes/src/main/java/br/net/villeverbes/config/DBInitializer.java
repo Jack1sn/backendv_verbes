@@ -16,15 +16,16 @@ import java.util.List;
 @Configuration
 public class DBInitializer {
 
-    @Bean
+      @Bean
     CommandLineRunner initDatabase(
-            UsuarioRepository usuarioRepository,
-            EmailAjudaRepository emailAjudaRepository,
-            PronomeRepository pronomeRepository,
-            VerboInfinitivoRepository verboRepository,
-            ComplementoRepository complementoRepository,
-            TempoVerbalRepository tempoVerbalRepository,
-            FraseCasaRepository fraseCasaRepository
+        UsuarioRepository usuarioRepository,
+        UsuarioJogoRepository usuarioJogoRepository,
+        EmailAjudaRepository emailAjudaRepository,
+        PronomeRepository pronomeRepository,
+        VerboInfinitivoRepository verboRepository,
+        ComplementoRepository complementoRepository,
+        TempoVerbalRepository tempoVerbalRepository,
+        FraseCasaRepository fraseCasaRepository
     ) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -60,7 +61,7 @@ public class DBInitializer {
             if (pronomeRepository.count() == 0) {
                 pronomeRepository.saveAll(List.of(
                         new PronomeEntity("Je"),
-                         new PronomeEntity("J'"),
+                        new PronomeEntity("J'"),
                         new PronomeEntity("Tu"),
                         new PronomeEntity("Il"),
                         new PronomeEntity("Elle"),
@@ -71,21 +72,43 @@ public class DBInitializer {
                 ));
             }
 
-            // Verbos
+            // Verbos (organizado em ordem alfabética)
             if (verboRepository.count() == 0) {
                 verboRepository.saveAll(List.of(
-                        new VerboInfinitivoEntity("manger"),
+                        new VerboInfinitivoEntity("aider"),
                         new VerboInfinitivoEntity("aller"),
-                        new VerboInfinitivoEntity("lire"),
-                        new VerboInfinitivoEntity("faire"),
-                        new VerboInfinitivoEntity("regarder"),
-                        new VerboInfinitivoEntity("jouer"),
+                        new VerboInfinitivoEntity("amener"),
+                        new VerboInfinitivoEntity("apporter"),
+                        new VerboInfinitivoEntity("asseoir"),
+                        new VerboInfinitivoEntity("avoir"),
                         new VerboInfinitivoEntity("boire"),
+                        new VerboInfinitivoEntity("brosser"),
+                        new VerboInfinitivoEntity("coucher"),
+                        new VerboInfinitivoEntity("chanter"),
+                        new VerboInfinitivoEntity("comprendre"),
+                        new VerboInfinitivoEntity("déjeuner"),
+                        new VerboInfinitivoEntity("donner"),
+                        new VerboInfinitivoEntity("écouter"),
                         new VerboInfinitivoEntity("écrire"),
-                        new VerboInfinitivoEntity("prendre"),
-                        new VerboInfinitivoEntity("aimer"),
+                        new VerboInfinitivoEntity("excuser"),
+                        new VerboInfinitivoEntity("faire"),
                         new VerboInfinitivoEntity("laver"),
-                        new VerboInfinitivoEntity("parler")
+                        new VerboInfinitivoEntity("lire"),
+                        new VerboInfinitivoEntity("manger"),
+                        new VerboInfinitivoEntity("ouvrir"),
+                        new VerboInfinitivoEntity("parler"),
+                        new VerboInfinitivoEntity("prendre"),
+                        new VerboInfinitivoEntity("promener"),
+                        new VerboInfinitivoEntity("ranger"),
+                        new VerboInfinitivoEntity("répéter"),
+                        new VerboInfinitivoEntity("regarder"),
+                        new VerboInfinitivoEntity("rester"),
+                        new VerboInfinitivoEntity("se brosser"),
+                        new VerboInfinitivoEntity("se coucher"),
+                        new VerboInfinitivoEntity("se lever"),
+                        new VerboInfinitivoEntity("travailler"),
+                        new VerboInfinitivoEntity("oublier"),
+                        new VerboInfinitivoEntity("jouer") // Ensure this is added
                 ));
             }
 
@@ -103,7 +126,16 @@ public class DBInitializer {
                         new ComplementoEntity("le bus"),
                         new ComplementoEntity("le chocolat"),
                         new ComplementoEntity("mes yeux"),
-                        new ComplementoEntity("français")
+                        new ComplementoEntity("français"),
+                        new ComplementoEntity("sept heures"),
+                        new ComplementoEntity("mon petit-déjeuner"),
+                        new ComplementoEntity("les dents"),
+                        new ComplementoEntity("mon lit"),
+                        new ComplementoEntity("mes vêtements"),
+                        new ComplementoEntity("midi"),
+                        new ComplementoEntity("mes devoirs"),
+                        new ComplementoEntity("en famille"),
+                        new ComplementoEntity("dix heures")
                 ));
             }
 
@@ -116,68 +148,67 @@ public class DBInitializer {
                         new TempoVerbalEntity("Futur Simple"),
                         new TempoVerbalEntity("Futur Proche"),
                         new TempoVerbalEntity("Passé Simple"),
-
                         new TempoVerbalEntity("Conditionnnel")
-                        
                 ));
             }
 
             // Frases
-           // Frases
-if (fraseCasaRepository.count() == 0) {
-    TempoVerbalEntity presente = tempoVerbalRepository.findByTempo("Présent").orElseThrow();
+            if (fraseCasaRepository.count() == 0) {
+                TempoVerbalEntity presente = tempoVerbalRepository.findByTempo("Présent").orElseThrow();
 
-    List<FraseAmbienteCasaEntity> frases = List.of(
-        new FraseAmbienteCasaEntity(
-            buscarPronome("je", pronomeRepository),
-            buscarVerbo("manger", verboRepository),
-            buscarComplemento("une pomme", complementoRepository),
-            presente,
-            "mange"
-        ),
-        new FraseAmbienteCasaEntity(
-            buscarPronome("tu", pronomeRepository),
-            buscarVerbo("aller", verboRepository),
-            buscarComplemento("à l'école", complementoRepository),
-            presente,
-            "vas"
-        ),
-        new FraseAmbienteCasaEntity(
-            buscarPronome("il", pronomeRepository),
-            buscarVerbo("lire", verboRepository),
-            buscarComplemento("un livre", complementoRepository),
-            presente,
-            " lit"
-        ),
-        new FraseAmbienteCasaEntity(
-            buscarPronome("elle", pronomeRepository),
-            buscarVerbo("faire", verboRepository),
-            buscarComplemento("du sport", complementoRepository),
-            presente,
-            "fait"
-        ),
-        new FraseAmbienteCasaEntity(
-            buscarPronome("nous", pronomeRepository),
-            buscarVerbo("regarder", verboRepository),
-            buscarComplemento("la télévision", complementoRepository),
-            presente,
-            " regardons"
-        ),
-        new FraseAmbienteCasaEntity(
-            buscarPronome("vous", pronomeRepository),
-            buscarVerbo("jouer", verboRepository),
-            buscarComplemento("au football", complementoRepository),
-            presente,
-            "jouez"
-        )
-    );
+                List<FraseAmbienteCasaEntity> frases = List.of(
+                    new FraseAmbienteCasaEntity(
+                        buscarPronome("je", pronomeRepository),
+                        buscarVerbo("manger", verboRepository),
+                        buscarComplemento("une pomme", complementoRepository),
+                        presente,
+                        "mange"
+                    ),
+                    new FraseAmbienteCasaEntity(
+                        buscarPronome("tu", pronomeRepository),
+                        buscarVerbo("aller", verboRepository),
+                        buscarComplemento("à l'école", complementoRepository),
+                        presente,
+                        "vas"
+                    ),
+                    new FraseAmbienteCasaEntity(
+                        buscarPronome("il", pronomeRepository),
+                        buscarVerbo("lire", verboRepository),
+                        buscarComplemento("un livre", complementoRepository),
+                        presente,
+                        "lit"
+                    ),
+                    new FraseAmbienteCasaEntity(
+                        buscarPronome("elle", pronomeRepository),
+                        buscarVerbo("faire", verboRepository),
+                        buscarComplemento("du sport", complementoRepository),
+                        presente,
+                        "fait"
+                    ),
+                    new FraseAmbienteCasaEntity(
+                        buscarPronome("nous", pronomeRepository),
+                        buscarVerbo("regarder", verboRepository),
+                        buscarComplemento("la télévision", complementoRepository),
+                        presente,
+                        "regardons"
+                    ),
+                    new FraseAmbienteCasaEntity(
+                        buscarPronome("vous", pronomeRepository),
+                        buscarVerbo("jouer", verboRepository),
+                        buscarComplemento("au football", complementoRepository),
+                        presente,
+                        "jouez"
+                    )
+                );
 
-    fraseCasaRepository.saveAll(frases);
-    System.out.println("✅ 6 frases cadastradas em tb_ambiente_casa.");
-}
-
+                fraseCasaRepository.saveAll(frases);
+                System.out.println("✅ 6 frases cadastradas em tb_ambiente_casa.");
+            }
         };
     }
+
+        
+    
 
     private PronomeEntity buscarPronome(String texto, PronomeRepository repo) {
         return repo.findByTexto(texto).orElseThrow(() -> new RuntimeException("Pronome não encontrado: " + texto));

@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import org.springframework.lang.NonNull; // Importando @NonNull para validação de nullidade
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -32,13 +34,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         new PublicEndpoint("POST", "/jogador/autocadastro"),
         new PublicEndpoint("POST", "/email/simples"),
         new PublicEndpoint("GET", "/ajuda"),
-          new PublicEndpoint("GET", "/ajuda/tem-nova-mensagem"),
+        new PublicEndpoint("GET", "/ajuda/tem-nova-mensagem"),
         new PublicEndpoint("POST", "/ajuda"),
         new PublicEndpoint("GET", "/admin/colaboradores"),
         new PublicEndpoint("GET", "/usuario/colaboradores"),
         new PublicEndpoint("GET", "/usuario/colaborador"),
         new PublicEndpoint("GET", "/usuario/jogadores"),
-         new PublicEndpoint("PUT", "/usuario/jogadores/**"),
+        new PublicEndpoint("PUT", "/usuario/jogadores/**"),
         new PublicEndpoint("POST", "/usuario/colaborador"),
         new PublicEndpoint("PUT", "/usuario/colaborador"),
         new PublicEndpoint("DELETE", "/usuario/colaboradores"),
@@ -52,7 +54,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         new PublicEndpoint("POST", "/api/pronomes"),
         new PublicEndpoint("POST", "/api/verbos"),
         new PublicEndpoint("POST", "/api/tempos"),
-        new PublicEndpoint("POST", "/api/complementos")
+        new PublicEndpoint("POST", "/api/complementos"),
+      new PublicEndpoint("POST", "/api/jogo/{usuarioId}"),
+        new PublicEndpoint("GET", "/api/jogo/{usuarioId}"),
+        new PublicEndpoint("GET", "/api/jogo/{usuarioId}/{jogoId}"),
+        new PublicEndpoint("POST", "/api/jogo/{usuarioId}/{jogoId}"),
+        new PublicEndpoint("PUT", "/api/jogo/{usuarioId}/{jogoId}"),
+        new PublicEndpoint("DELETE", "/api/jogo/{usuarioId}/{jogoId}")
     );
 
     public JwtAuthenticationFilter(UserDetailsService userDetailsService) {
@@ -60,9 +68,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getRequestURI();
         String method = request.getMethod();
@@ -122,7 +130,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String basePath = endpoint.path.replace("/**", "");
                 return path.startsWith(basePath);
             }
-            return endpoint.path.equals(path);
+             // Verifica se o path é igual ou se o path tem parâmetros variáveis, como {usuarioId}
+          return endpoint.path.equals(path) || path.matches(endpoint.path.replace("{usuarioId}", "\\d+").replace("{jogoId}", "\\d+"));
+            //return endpoint.path.equals(path);
         });
     }
 

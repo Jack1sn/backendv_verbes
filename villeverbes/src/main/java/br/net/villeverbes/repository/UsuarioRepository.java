@@ -3,10 +3,12 @@ package br.net.villeverbes.repository;
 import java.util.List;
 import java.util.Optional;
 
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.net.villeverbes.entity.UsuarioEntity;
+import org.springframework.lang.NonNull;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
@@ -29,6 +31,8 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
     // Buscar por login (caso use login separado do e-mail)
     Optional<UsuarioEntity> findByLogin(String login);
 
+    @NonNull
+    Optional<UsuarioEntity> findById(@NonNull Long id); 
 
     // Buscar usuário ativo por e-mail (caso tenha campo ativo no banco futuramente)
     // Optional<UsuarioEntity> findByEmailAndAtivoTrue(String email);
