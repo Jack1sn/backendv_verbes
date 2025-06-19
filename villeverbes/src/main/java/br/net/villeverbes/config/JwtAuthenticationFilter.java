@@ -40,6 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         new PublicEndpoint("GET", "/usuario/colaboradores"),
         new PublicEndpoint("GET", "/usuario/colaborador"),
         new PublicEndpoint("GET", "/usuario/jogadores"),
+         new PublicEndpoint("GET", "/usuario/visualizar-jogadores"),
         new PublicEndpoint("PUT", "/usuario/jogadores/**"),
         new PublicEndpoint("POST", "/usuario/colaborador"),
         new PublicEndpoint("PUT", "/usuario/colaborador"),

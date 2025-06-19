@@ -153,12 +153,6 @@ public UsuarioEntity salvarJogador(UsuarioDTO dto) {
                 .collect(Collectors.toList());
     }
 
-    public List<UsuarioDTO> listarJogadores() {
-    return usuarioRepository.findByPerfil("JOGADOR").stream()
-            .filter(UsuarioEntity::isAtivo)
-            .map(UsuarioDTO::new)
-            .collect(Collectors.toList());
-}
 
 @Transactional
 public void bloquearJogador(Long id) {
@@ -179,6 +173,16 @@ public void desbloquearJogador(Long id) {
     jogador.setAtivo(true);
     usuarioRepository.save(jogador);
 }
+
+public List<UsuarioDTO> listarJogadores() {
+    return usuarioRepository.findByPerfilAndAtivo("JOGADOR", true)
+            .stream()
+            .map(UsuarioDTO::new)
+            .collect(Collectors.toList());
+}
+
+
+
 
 
 }

@@ -49,21 +49,22 @@ public class SecurityConfig {
                     "/usuario/colaborador",        // Cadastro de colaborador
                     "/api/frases-casa",            // Frases públicas
                     "/api/pronomes", "/api/verbos", "/api/tempos", "/api/complementos",  // Recursos públicos
-                    "/api/jogo/salvar",            // Salvar jogo (pode ser público ou não, dependendo do caso)
-
-                    // Rotas de jogos públicas (liberando todos os verbos HTTP)
+                    "/api/jogo/salvar", 
+                    "/usuario/jogadores/{id}/ativo",  // Habilitar esse endpoint específico como público
+                    "/usuario/jogadores",          // **Liberando endpoint de jogadores**
+                    "/usuario/visualizar-jogadores",  // Liberando a visualização de jogadores como público
                     "/api/jogo/**"                 // Todos os endpoints relacionados a jogos
                 ).permitAll()
 
                 // Permite rotas de colaboradores e jogadores com autenticação
-                .requestMatchers(HttpMethod.GET, "/usuario/jogadores").authenticated() // Listar jogadores
-                .requestMatchers(HttpMethod.POST, "/usuario/colaborador").authenticated()      // Cadastro colaborador
                 .requestMatchers(HttpMethod.PUT, "/usuario/colaboradores").authenticated()    // Atualizar colaborador
                 .requestMatchers(HttpMethod.DELETE, "/usuario/colaboradores").authenticated() // Excluir colaborador
                 .requestMatchers(HttpMethod.PUT, "/usuario/jogadores").authenticated()       // Atualizar jogador
-                .requestMatchers(HttpMethod.PUT, "/usuario/jogadores/{id}/ativo").authenticated() // Bloquear/desbloquear jogador
                 .requestMatchers(HttpMethod.GET, "/usuario/colaboradores/**").authenticated() // Ver colaboradores específicos
 
+                // Permite o acesso sem autenticação para jogadores (ADMIN pode acessar diretamente)
+                .requestMatchers(HttpMethod.PUT, "/usuario/jogadores/**").permitAll()  // Liberar ADMIN para bloquear/desbloquear jogadores
+                 .requestMatchers(HttpMethod.GET, "/usuario/jogadores/**").permitAll()
                 // Restringe o restante a usuários autenticados
                 .anyRequest().authenticated()
             )
