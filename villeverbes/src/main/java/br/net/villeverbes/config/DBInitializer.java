@@ -267,4 +267,7 @@ public class DBInitializer {
                                                 String complemento, String bairro, String cidade, String estado) {
         criarUsuarioSeNaoExistir(repo, email, nome, perfil, senha, nascimento, login, cpf, telefone, cep, endereco, numero, complemento, bairro, cidade, estado);
     }
+
+
+    
 }

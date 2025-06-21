@@ -12,8 +12,8 @@ public class UsuarioJogoDTO {
     private int total;            // Total de tentativas
     private String acertoPorAmbiente;  // Descrição do desempenho (e.g., "1 de 11")
     
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDate data;       // Data em que o jogo foi realizado
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate data;   // Data em que o jogo foi realizado
     
     private boolean resultado;    // Status do resultado (ex: se o jogador ganhou ou não)
 
@@ -21,7 +21,8 @@ public class UsuarioJogoDTO {
     public UsuarioJogoDTO() {}
 
     // Construtor com os campos principais do DTO
-    public UsuarioJogoDTO(String personagem, String ambiente, int acertos, int total, String acertoPorAmbiente, LocalDate data, boolean resultado) {
+    public UsuarioJogoDTO(String personagem, String ambiente, int acertos, int total,
+     String acertoPorAmbiente, LocalDate data, boolean resultado) {
         this.personagem = personagem;
         this.ambiente = ambiente;
         this.acertos = acertos;
@@ -84,7 +85,8 @@ public class UsuarioJogoDTO {
         return data;
     }
 
-    public void setData(LocalDate data) {
+    public void setData(LocalDate
+     data) {
         this.data = data;
     }
 

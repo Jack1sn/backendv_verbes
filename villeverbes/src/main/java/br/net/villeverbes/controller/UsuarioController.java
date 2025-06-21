@@ -184,7 +184,8 @@ public ResponseEntity<?> listarJogadores() {
 }
 /**
  * Bloquear ou desbloquear jogador
- */@PutMapping("usuario/jogadores/{id}/ativo")
+ */
+@PutMapping("usuario/jogadores/{id}/ativo")
 public ResponseEntity<?> atualizarStatusJogador(
         @PathVariable Long id,
         @RequestParam boolean ativo
@@ -209,7 +210,6 @@ public ResponseEntity<?> atualizarStatusJogador(
                 .body(Map.of("error", "Erro ao atualizar status do jogador: " + e.getMessage()));
     }
 }
-
 
 
 }

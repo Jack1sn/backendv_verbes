@@ -8,14 +8,14 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import org.springframework.lang.NonNull; // Importando @NonNull para validação de nullidade
 
 import java.io.IOException;
 import java.util.Date;
@@ -27,7 +27,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
 
-    // Lista de rotas públicas, mapeando método + path
+    private static final AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    // Lista de endpoints públicos
     private static final List<PublicEndpoint> PUBLIC_ENDPOINTS = List.of(
         new PublicEndpoint("POST", "/auth/login"),
         new PublicEndpoint("POST", "/auth/enviar-senha"),
@@ -40,13 +42,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         new PublicEndpoint("GET", "/usuario/colaboradores"),
         new PublicEndpoint("GET", "/usuario/colaborador"),
         new PublicEndpoint("GET", "/usuario/jogadores"),
-         new PublicEndpoint("GET", "/usuario/visualizar-jogadores"),
+        new PublicEndpoint("GET", "/usuario/visualizar-jogadores"),
         new PublicEndpoint("PUT", "/usuario/jogadores/**"),
         new PublicEndpoint("POST", "/usuario/colaborador"),
         new PublicEndpoint("PUT", "/usuario/colaborador"),
         new PublicEndpoint("DELETE", "/usuario/colaboradores"),
         new PublicEndpoint("GET", "/api/frases-casa"),
-        new PublicEndpoint("GET", "/api/frases-casa/"), // pra caso venha com /
         new PublicEndpoint("GET", "/api/frases-casa/**"),
         new PublicEndpoint("GET", "/api/pronomes"),
         new PublicEndpoint("GET", "/api/verbos"),
@@ -56,12 +57,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         new PublicEndpoint("POST", "/api/verbos"),
         new PublicEndpoint("POST", "/api/tempos"),
         new PublicEndpoint("POST", "/api/complementos"),
-      new PublicEndpoint("POST", "/api/jogo/{usuarioId}"),
-        new PublicEndpoint("GET", "/api/jogo/{usuarioId}"),
-        new PublicEndpoint("GET", "/api/jogo/{usuarioId}/{jogoId}"),
-        new PublicEndpoint("POST", "/api/jogo/{usuarioId}/{jogoId}"),
-        new PublicEndpoint("PUT", "/api/jogo/{usuarioId}/{jogoId}"),
-        new PublicEndpoint("DELETE", "/api/jogo/{usuarioId}/{jogoId}")
+
+        // Endpoints de jogo públicos (ajuste conforme sua regra de segurança)
+        new PublicEndpoint("POST", "/api/jogo/**"),
+        new PublicEndpoint("GET", "/api/jogo/**"),
+        new PublicEndpoint("PUT", "/api/jogo/**"),
+        new PublicEndpoint("DELETE", "/api/jogo/**"),
+        new PublicEndpoint("POST", "/api/jogo"),
+          new PublicEndpoint("POST", "/api/jogo/*"),
+        new PublicEndpoint("POST", "/api/jogo/{usuarioId}")
+
+
     );
 
     public JwtAuthenticationFilter(UserDetailsService userDetailsService) {
@@ -71,19 +77,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+                                    @NonNull FilterChain filterChain) throws 
+                                    ServletException, IOException {
+                                        
+
 
         String path = request.getRequestURI();
         String method = request.getMethod();
+       
+        System.out.println("[DEBUG] Método: " + method);    
+System.out.println("[DEBUG] Caminho: " + path);
+System.out.println("[DEBUG] É endpoint público? " + isPublicEndpoint(method, path));
 
-        // Verifica se rota + método são públicos (não precisam de token)
+
+        // Se a rota for pública, libera
         if (isPublicEndpoint(method, path)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Pega o token do header Authorization
         String token = request.getHeader("Authorization");
+
         if (token == null || !token.startsWith("Bearer ")) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token JWT não encontrado ou inválido");
             return;
@@ -98,22 +112,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             DecodedJWT decodedJWT = verifier.verify(jwt);
 
-             System.out.println("Token válido, usuário: " + decodedJWT.getSubject());
-
             if (decodedJWT.getExpiresAt().before(new Date())) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado");
                 return;
             }
 
             String username = decodedJWT.getSubject();
+            String role = decodedJWT.getClaim("role").asString();
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
             SecurityContextHolder.getContext().setAuthentication(authToken);
+
+            System.out.println("Usuário autenticado: " + role);
 
             filterChain.doFilter(request, response);
 
@@ -123,21 +138,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicEndpoint(String method, String path) {
-        return PUBLIC_ENDPOINTS.stream().anyMatch(endpoint -> {
-            if (!endpoint.method.equalsIgnoreCase(method)) {
-                return false;
-            }
-            if (endpoint.path.endsWith("/**")) {
-                String basePath = endpoint.path.replace("/**", "");
-                return path.startsWith(basePath);
-            }
-             // Verifica se o path é igual ou se o path tem parâmetros variáveis, como {usuarioId}
-          return endpoint.path.equals(path) || path.matches(endpoint.path.replace("{usuarioId}", "\\d+").replace("{jogoId}", "\\d+"));
-            //return endpoint.path.equals(path);
-        });
+        return PUBLIC_ENDPOINTS.stream().anyMatch(endpoint ->
+                endpoint.method.equalsIgnoreCase(method) && pathMatcher.match(endpoint.path, path));
     }
 
-    // Classe auxiliar para mapear método + path
+    // Classe auxiliar
     private static class PublicEndpoint {
         String method;
         String path;

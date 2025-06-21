@@ -31,51 +31,58 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Desabilitar CSRF para permitir chamadas de API sem token CSRF
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configuração de CORS
+            .csrf(csrf -> csrf.disable()) // Desabilitar CSRF
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS
             .authorizeHttpRequests(auth -> auth
-                // Permite as requisições OPTIONS (CORS)
+                // Libera CORS preflight
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // Permite acesso público a endpoints específicos
-                .requestMatchers(
-                    "/auth/login",                 // Login
-                    "/auth/enviar-senha",          // Envio de senha
-                    "/jogador/autocadastro",       // Autocadastro de jogador
-                    "/email/simples",              // Envio de email simples
-                    "/ajuda",                      // Rota de ajuda
-                    "/admin/colaboradores",        // Acesso a colaboradores
-                    "/usuario/colaboradores",      // Listagem de colaboradores
-                    "/usuario/colaborador",        // Cadastro de colaborador
-                    "/api/frases-casa",            // Frases públicas
-                    "/api/pronomes", "/api/verbos", "/api/tempos", "/api/complementos",  // Recursos públicos
-                    "/api/jogo/salvar", 
-                    "/usuario/jogadores/{id}/ativo",  // Habilitar esse endpoint específico como público
-                    "/usuario/jogadores",          // **Liberando endpoint de jogadores**
-                    "/usuario/visualizar-jogadores",  // Liberando a visualização de jogadores como público
-                    "/api/jogo/**"                 // Todos os endpoints relacionados a jogos
-                ).permitAll()
+                // Endpoints públicos (sem autenticação)
+                .requestMatchers("/auth/login").permitAll()
+                .requestMatchers("/auth/enviar-senha").permitAll()
+                .requestMatchers("/jogador/autocadastro").permitAll()
+                .requestMatchers("/email/simples").permitAll()
+                .requestMatchers("/ajuda").permitAll()
+                .requestMatchers("/ajuda/tem-nova-mensagem").permitAll()
+                .requestMatchers("/admin/colaboradores").permitAll()
+                .requestMatchers("/usuario/colaboradores").permitAll()
+                .requestMatchers("/usuario/colaborador").permitAll()
+                .requestMatchers("/usuario/visualizar-jogadores").permitAll()
+                .requestMatchers("/usuario/jogadores").permitAll()
+                .requestMatchers("/usuario/jogadores/{id}/ativo").permitAll()
+                .requestMatchers("/api/frases-casa/**").permitAll()
+                .requestMatchers("/api/pronomes").permitAll()
+                .requestMatchers("/api/verbos").permitAll()
+                .requestMatchers("/api/tempos").permitAll()
+                .requestMatchers("/api/complementos").permitAll()
 
-                // Permite rotas de colaboradores e jogadores com autenticação
-                .requestMatchers(HttpMethod.PUT, "/usuario/colaboradores").authenticated()    // Atualizar colaborador
-                .requestMatchers(HttpMethod.DELETE, "/usuario/colaboradores").authenticated() // Excluir colaborador
-                .requestMatchers(HttpMethod.PUT, "/usuario/jogadores").authenticated()       // Atualizar jogador
-                .requestMatchers(HttpMethod.GET, "/usuario/colaboradores/**").authenticated() // Ver colaboradores específicos
+                // Liberação completa dos métodos para o endpoint /api/jogo/**
+                .requestMatchers(HttpMethod.GET, "/api/jogo/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/jogo/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/jogo/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/jogo/**").permitAll()
+                 .requestMatchers(HttpMethod.POST, "/api/jogo").permitAll()
+                // Outras rotas protegidas
+                .requestMatchers(HttpMethod.PUT, "/usuario/colaboradores").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/usuario/colaboradores").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/usuario/jogadores").authenticated()
+                .requestMatchers(HttpMethod.GET, "/usuario/colaboradores/**").authenticated()
 
-                // Permite o acesso sem autenticação para jogadores (ADMIN pode acessar diretamente)
-                .requestMatchers(HttpMethod.PUT, "/usuario/jogadores/**").permitAll()  // Liberar ADMIN para bloquear/desbloquear jogadores
-                 .requestMatchers(HttpMethod.GET, "/usuario/jogadores/**").permitAll()
-                // Restringe o restante a usuários autenticados
+                // Permitir PUT/GET detalhado de jogadores mesmo sem autenticação
+                .requestMatchers(HttpMethod.PUT, "/usuario/jogadores/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/usuario/jogadores/**").permitAll()
+
+                // Todo o restante exige autenticação
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class) // Filtro de autenticação JWT
-            .httpBasic(httpBasic -> {}) // Desabilitar autenticação HTTP Basic
-            .formLogin(form -> form.disable()) // Desabilitar o login padrão do Spring
-            .logout(logout -> logout.disable()) // Desabilitar logout
-            .exceptionHandling(exceptionHandling -> exceptionHandling
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.sendError(401, "Usuário não autorizado. Por favor, forneça um token válido.");
-                })
+            // Filtro JWT antes da autenticação padrão
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .httpBasic(httpBasic -> {}) // Desabilita HTTP Basic
+            .formLogin(form -> form.disable()) // Desabilita formulário de login
+            .logout(logout -> logout.disable()) // Desabilita logout
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint((req, res, authException) ->
+                    res.sendError(401, "Usuário não autorizado. Forneça um token JWT válido."))
             );
 
         return http.build();
@@ -83,29 +90,29 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(userDetailsService); // Filtro JWT
+        return new JwtAuthenticationFilter(userDetailsService);
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Codificador de senha
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200")); // Permitir frontend Angular
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Cabeçalhos permitidos
-        config.setAllowCredentials(true); // Permitir credenciais
+        config.setAllowedOrigins(List.of("http://localhost:4200"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);  // Registra a configuração de CORS para todas as rotas
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();  // Gerenciador de autenticação
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 }
