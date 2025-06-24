@@ -2,6 +2,7 @@ package br.net.villeverbes.controller;
 
 import br.net.villeverbes.dto.EmailAjudaDTO;
 import br.net.villeverbes.service.EmailAjudaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class EmailAjudaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EmailAjudaDTO salvarEmailAjuda(@RequestBody EmailAjudaDTO dto) {
+    public EmailAjudaDTO salvarEmailAjuda(@RequestBody @Valid EmailAjudaDTO dto) {
         return emailAjudaService.enviarEGravar(dto);
     }
 
@@ -29,19 +30,19 @@ public class EmailAjudaController {
         return emailAjudaService.listarTodos();
     }
 
-    // ✅ Novo endpoint: responder um e-mail
-    @PutMapping("/{id}/resposta")
-    public EmailAjudaDTO responder(@PathVariable Long id, @RequestBody String resposta) {
-        return emailAjudaService.responder(id, resposta);
-    }
+   @PutMapping("/{id}/resposta")
+public EmailAjudaDTO responder(@PathVariable Long id, @RequestBody EmailAjudaDTO dto) {
+    return emailAjudaService.responder(id, dto.getResposta());
+}
+
 
     @GetMapping("/tem-nova-mensagem")
     public boolean temNovaMensagem() {
-    return emailAjudaService.temMensagensNaoRespondidas();
-}
-@GetMapping("/quantidade-nao-respondidas")
+        return emailAjudaService.temMensagensNaoRespondidas();
+    }
+
+    @GetMapping("/quantidade-nao-respondidas")
     public Long contarNaoRespondidas() {
         return emailAjudaService.contarNaoRespondidas();
     }
-
 }

@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .requestMatchers("/jogador/autocadastro").permitAll()
                 .requestMatchers("/email/simples").permitAll()
                 .requestMatchers("/ajuda").permitAll()
+                .requestMatchers("/ajuda/{id}/resposta").permitAll()
                 .requestMatchers("/ajuda/tem-nova-mensagem").permitAll()
                 .requestMatchers("/admin/colaboradores").permitAll()
                 .requestMatchers("/usuario/colaboradores").permitAll()
