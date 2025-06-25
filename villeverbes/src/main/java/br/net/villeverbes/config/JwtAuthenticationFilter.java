@@ -32,6 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // Lista de endpoints públicos
     private static final List<PublicEndpoint> PUBLIC_ENDPOINTS = List.of(
         new PublicEndpoint("POST", "/auth/login"),
+        new PublicEndpoint("POST", "/api/auth/redefinir-senha"),
         new PublicEndpoint("POST", "/auth/enviar-senha"),
         new PublicEndpoint("POST", "/jogador/autocadastro"),
         new PublicEndpoint("POST", "/email/simples"),

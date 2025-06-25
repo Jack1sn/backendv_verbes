@@ -181,6 +181,18 @@ public List<UsuarioDTO> listarJogadores() {
             .collect(Collectors.toList());
 }
 
+@Transactional
+public void redefinirSenha(String email, String senhaAtual, String novaSenha) {
+    UsuarioEntity usuario = usuarioRepository.findByEmail(email)
+        .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+
+    if (!passwordEncoder.matches(senhaAtual, usuario.getSenha())) {
+        throw new IllegalArgumentException("Senha atual incorreta.");
+    }
+
+    usuario.setSenha(passwordEncoder.encode(novaSenha));
+    usuarioRepository.save(usuario);
+}
 
 
 

@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/verbos").permitAll()
                 .requestMatchers("/api/tempos").permitAll()
                 .requestMatchers("/api/complementos").permitAll()
-
+                .requestMatchers("/api/auth/redefinir-senha").permitAll()
                 // Liberação completa dos métodos para o endpoint /api/jogo/**
                 .requestMatchers(HttpMethod.GET, "/api/jogo/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/jogo/**").permitAll()
