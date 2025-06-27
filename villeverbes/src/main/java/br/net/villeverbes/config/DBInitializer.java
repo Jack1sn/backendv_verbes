@@ -16,7 +16,7 @@ import java.util.List;
 @Configuration
 public class DBInitializer {
 
-      @Bean
+    @Bean
     CommandLineRunner initDatabase(
         UsuarioRepository usuarioRepository,
         UsuarioJogoRepository usuarioJogoRepository,
@@ -72,7 +72,7 @@ public class DBInitializer {
                 ));
             }
 
-            // Verbos (organizado em ordem alfabética)
+            // Verbos
             if (verboRepository.count() == 0) {
                 verboRepository.saveAll(List.of(
                         new VerboInfinitivoEntity("aider"),
@@ -108,7 +108,8 @@ public class DBInitializer {
                         new VerboInfinitivoEntity("se lever"),
                         new VerboInfinitivoEntity("travailler"),
                         new VerboInfinitivoEntity("oublier"),
-                        new VerboInfinitivoEntity("jouer") // Ensure this is added
+                        new VerboInfinitivoEntity("jouer"),
+                        new VerboInfinitivoEntity("préparer")
                 ));
             }
 
@@ -132,10 +133,19 @@ public class DBInitializer {
                         new ComplementoEntity("les dents"),
                         new ComplementoEntity("mon lit"),
                         new ComplementoEntity("mes vêtements"),
-                        new ComplementoEntity("midi"),
+                        new ComplementoEntity("à midi"),
                         new ComplementoEntity("mes devoirs"),
+                        new ComplementoEntity("les devoirs"),
                         new ComplementoEntity("en famille"),
-                        new ComplementoEntity("dix heures")
+                        new ComplementoEntity("dix heures"),
+                        new ComplementoEntity("la musique"),
+                           new ComplementoEntity("le dîner"),
+                         new ComplementoEntity("à la maison"),
+                        new ComplementoEntity("les informations"),
+                          new ComplementoEntity("du ménage"),
+                            new ComplementoEntity("le film"), 
+                             new ComplementoEntity("la radio"),
+                              new ComplementoEntity("la chambre")      // Adicionando "la musique"
                 ));
             }
 
@@ -152,7 +162,7 @@ public class DBInitializer {
                 ));
             }
 
-            // Frases
+            // Frases no ambiente doméstico (FraseCasa)
             if (fraseCasaRepository.count() == 0) {
                 TempoVerbalEntity presente = tempoVerbalRepository.findByTempo("Présent").orElseThrow();
 
@@ -198,17 +208,136 @@ public class DBInitializer {
                         buscarComplemento("au football", complementoRepository),
                         presente,
                         "jouez"
-                    )
+                    ),
+                    new FraseAmbienteCasaEntity(
+                        buscarPronome("je", pronomeRepository),
+                        buscarVerbo("laver", verboRepository),
+                        buscarComplemento("mes vêtements", complementoRepository),
+                        presente,
+                        "lave"
+                    ),
+                    new FraseAmbienteCasaEntity(
+                        buscarPronome("tu", pronomeRepository),
+                        buscarVerbo("répéter", verboRepository),
+                        buscarComplemento("les devoirs", complementoRepository),
+                        presente,
+                        "répètes"
+                    ),
+                    new FraseAmbienteCasaEntity(
+                        buscarPronome("il", pronomeRepository),
+                        buscarVerbo("écouter", verboRepository),
+                        buscarComplemento("la musique", complementoRepository),
+                        presente,
+                        "écoute"
+                    ),
+                    new FraseAmbienteCasaEntity(
+                        buscarPronome("ils", pronomeRepository),
+                        buscarVerbo("regarder", verboRepository),
+                        buscarComplemento("le bus", complementoRepository),
+                        presente,
+                        "regardent"
+                    ),
+                    // Frase adicional para completar 23
+                    new FraseAmbienteCasaEntity(
+                        buscarPronome("elles", pronomeRepository),
+                        buscarVerbo("parler", verboRepository),
+                        buscarComplemento("en famille", complementoRepository),
+                        presente,
+                        "parlent"
+                    ),
+                    new FraseAmbienteCasaEntity(
+    buscarPronome("je", pronomeRepository),
+    buscarVerbo("faire", verboRepository),
+    buscarComplemento("les devoirs", complementoRepository),
+    presente,
+    "fais"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("tu", pronomeRepository),
+    buscarVerbo("lire", verboRepository),
+    buscarComplemento("un livre", complementoRepository),
+    presente,
+    "lis"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("il", pronomeRepository),
+    buscarVerbo("écouter", verboRepository),
+    buscarComplemento("la musique", complementoRepository),
+    presente,
+    "écoute"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("elle", pronomeRepository),
+    buscarVerbo("travailler", verboRepository),
+    buscarComplemento("à la maison", complementoRepository),
+    presente,
+    "travaille"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("nous", pronomeRepository),
+    buscarVerbo("manger", verboRepository),
+    buscarComplemento("à midi", complementoRepository),
+    presente,
+    "mangeons"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("vous", pronomeRepository),
+    buscarVerbo("boire", verboRepository),
+    buscarComplemento("de l'eau", complementoRepository),
+    presente,
+    "buvez"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("ils", pronomeRepository),
+    buscarVerbo("faire", verboRepository),
+    buscarComplemento("du ménage", complementoRepository),
+    presente,
+    "font"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("elles", pronomeRepository),
+    buscarVerbo("regarder", verboRepository),
+    buscarComplemento("le film", complementoRepository),
+    presente,
+    "regardent"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("je", pronomeRepository),
+    buscarVerbo("répéter", verboRepository),
+    buscarComplemento("les informations", complementoRepository),
+    presente,
+    "répète"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("tu", pronomeRepository),
+    buscarVerbo("écouter", verboRepository),
+    buscarComplemento("la radio", complementoRepository),
+    presente,
+    "écoutes"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("nous", pronomeRepository),
+    buscarVerbo("ranger", verboRepository),
+    buscarComplemento("la chambre", complementoRepository),
+    presente,
+    "rangeons"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("vous", pronomeRepository),
+    buscarVerbo("préparer", verboRepository),
+    buscarComplemento("le dîner", complementoRepository),
+    presente,
+    "préparez"
+)
+
+
                 );
 
                 fraseCasaRepository.saveAll(frases);
-                System.out.println("✅ 6 frases cadastradas em tb_ambiente_casa.");
+                System.out.println("✅ Frases cadastradas em tb_ambiente_casa.");
             }
         };
     }
-
-        
-    
 
     private PronomeEntity buscarPronome(String texto, PronomeRepository repo) {
         return repo.findByTexto(texto).orElseThrow(() -> new RuntimeException("Pronome não encontrado: " + texto));
@@ -267,7 +396,4 @@ public class DBInitializer {
                                                 String complemento, String bairro, String cidade, String estado) {
         criarUsuarioSeNaoExistir(repo, email, nome, perfil, senha, nascimento, login, cpf, telefone, cep, endereco, numero, complemento, bairro, cidade, estado);
     }
-
-
-    
 }

@@ -1,20 +1,25 @@
-
 package br.net.villeverbes.dto;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ComplementoDTO {
 
     private Long id;
     private String descricao;
 
-    // Construtores
-    public ComplementoDTO() {}
+    // Construtor padrão necessário para algumas operações
+    public ComplementoDTO() {
+    }
 
-    public ComplementoDTO(Long id, String descricao) {
+    // Construtor com @JsonCreator para desserialização do JSON
+    @JsonCreator
+    public ComplementoDTO(@JsonProperty("id") Long id, @JsonProperty("descricao") String descricao) {
         this.id = id;
         this.descricao = descricao;
     }
 
-    // Getters e Setters
+    // Getters e setters
     public Long getId() {
         return id;
     }

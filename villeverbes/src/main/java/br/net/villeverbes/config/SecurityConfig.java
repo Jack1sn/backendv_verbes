@@ -31,8 +31,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Desabilitar CSRF
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 // Libera CORS preflight
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -45,25 +45,34 @@ public class SecurityConfig {
                 .requestMatchers("/ajuda").permitAll()
                 .requestMatchers("/ajuda/{id}/resposta").permitAll()
                 .requestMatchers("/ajuda/tem-nova-mensagem").permitAll()
+
                 .requestMatchers("/admin/colaboradores").permitAll()
                 .requestMatchers("/usuario/colaboradores").permitAll()
                 .requestMatchers("/usuario/colaborador").permitAll()
                 .requestMatchers("/usuario/visualizar-jogadores").permitAll()
                 .requestMatchers("/usuario/jogadores").permitAll()
                 .requestMatchers("/usuario/jogadores/{id}/ativo").permitAll()
-                .requestMatchers("/api/frases-casa/**").permitAll()
+
                 .requestMatchers("/api/pronomes").permitAll()
                 .requestMatchers("/api/verbos").permitAll()
                 .requestMatchers("/api/tempos").permitAll()
                 .requestMatchers("/api/complementos").permitAll()
                 .requestMatchers("/api/auth/redefinir-senha").permitAll()
-                // Liberação completa dos métodos para o endpoint /api/jogo/**
+
+                // Endpoints de frases públicos (GET, POST, PUT)
+                .requestMatchers(HttpMethod.GET, "/api/frases").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/frases/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/frases/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/frases/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/frases/").permitAll() 
+                // Endpoints de jogo públicos
                 .requestMatchers(HttpMethod.GET, "/api/jogo/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/jogo/**").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/jogo/**").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/api/jogo/**").permitAll()
-                 .requestMatchers(HttpMethod.POST, "/api/jogo").permitAll()
-                // Outras rotas protegidas
+                .requestMatchers(HttpMethod.POST, "/api/jogo").permitAll()
+
+                // Endpoints protegidos (necessita autenticação)
                 .requestMatchers(HttpMethod.PUT, "/usuario/colaboradores").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/usuario/colaboradores").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/usuario/jogadores").authenticated()
@@ -73,14 +82,13 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/usuario/jogadores/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/usuario/jogadores/**").permitAll()
 
-                // Todo o restante exige autenticação
+                // Qualquer outra requisição exige autenticação
                 .anyRequest().authenticated()
             )
-            // Filtro JWT antes da autenticação padrão
             .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-            .httpBasic(httpBasic -> {}) // Desabilita HTTP Basic
-            .formLogin(form -> form.disable()) // Desabilita formulário de login
-            .logout(logout -> logout.disable()) // Desabilita logout
+            .httpBasic(httpBasic -> {}) // desabilita HTTP Basic
+            .formLogin(form -> form.disable()) // desabilita login por formulário
+            .logout(logout -> logout.disable()) // desabilita logout
             .exceptionHandling(exception -> exception
                 .authenticationEntryPoint((req, res, authException) ->
                     res.sendError(401, "Usuário não autorizado. Forneça um token JWT válido."))

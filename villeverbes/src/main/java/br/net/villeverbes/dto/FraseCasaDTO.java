@@ -3,7 +3,13 @@ package br.net.villeverbes.dto;
 public class FraseCasaDTO {
     private Long id;
 
-    // IDs usados para operações diretas com registros existentes
+    // Entidades associadas
+    private PronomeDTO pronome;
+    private VerboInfinitivoDTO verboInfinitivo;
+    private ComplementoDTO complemento;
+    private TempoVerbalDTO tempoVerbal;
+
+    // IDs para operações diretas com registros existentes (semântica de relacionamento)
     private Long pronomeId;
     private Long verboInfinitivoId;
     private Long complementoId;
@@ -15,8 +21,9 @@ public class FraseCasaDTO {
     private String tempoVerbalTexto;
     private String complementoDescricao;
 
-    // Outros campos
+   
     private String respostaCorreta;
+
     private String descricaoMontada;
 
     // Getters e Setters
@@ -27,6 +34,38 @@ public class FraseCasaDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public PronomeDTO getPronome() {
+        return pronome;
+    }
+
+    public void setPronome(PronomeDTO pronome) {
+        this.pronome = pronome;
+    }
+
+    public VerboInfinitivoDTO getVerboInfinitivo() {
+        return verboInfinitivo;
+    }
+
+    public void setVerboInfinitivo(VerboInfinitivoDTO verboInfinitivo) {
+        this.verboInfinitivo = verboInfinitivo;
+    }
+
+    public ComplementoDTO getComplemento() {
+        return complemento;
+    }
+
+    public void setComplemento(ComplementoDTO complemento) {
+        this.complemento = complemento;
+    }
+
+    public TempoVerbalDTO getTempoVerbal() {
+        return tempoVerbal;
+    }
+
+    public void setTempoVerbal(TempoVerbalDTO tempoVerbal) {
+        this.tempoVerbal = tempoVerbal;
     }
 
     public Long getPronomeId() {
