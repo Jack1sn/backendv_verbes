@@ -7,27 +7,29 @@ public class UsuarioJogoDTO {
 
     private Long id;
     private String personagem;    // Nome do personagem (se aplicável)
-    private String ambiente;      // Ambiente do jogo (e.g., 'casa', 'rua', etc.)
-    private int acertos;          // Número de acertos no jogo
-    private int total;            // Total de tentativas
-    private String acertoPorAmbiente;  // Descrição do desempenho (e.g., "1 de 11")
-    
+        // Ambiente do jogo (e.g., 'casa', 'rua', etc.)
+    private int acertoCasa;       // Acertos na fase Casa
+    private int acertoParque;     // Acertos na fase Parque
+    private int acertoUniversidade;  // Acertos na fase Universidade
+    private int totalAcertos;     // Total de acertos somados entre as fases
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;   // Data em que o jogo foi realizado
     
     private boolean resultado;    // Status do resultado (ex: se o jogador ganhou ou não)
 
-    // Construtor sem parâmetros
+    // Construtor sem parâmetros (necessário para frameworks como Jackson)
     public UsuarioJogoDTO() {}
 
-    // Construtor com os campos principais do DTO
-    public UsuarioJogoDTO(String personagem, String ambiente, int acertos, int total,
-     String acertoPorAmbiente, LocalDate data, boolean resultado) {
+    // Construtor com todos os campos
+    public UsuarioJogoDTO(String personagem,  int acertoCasa, int acertoParque, 
+                           int acertoUniversidade, int totalAcertos, LocalDate data, boolean resultado) {
         this.personagem = personagem;
-        this.ambiente = ambiente;
-        this.acertos = acertos;
-        this.total = total;
-        this.acertoPorAmbiente = acertoPorAmbiente;
+        
+        this.acertoCasa = acertoCasa;
+        this.acertoParque = acertoParque;
+        this.acertoUniversidade = acertoUniversidade;
+        this.totalAcertos = totalAcertos;
         this.data = data;
         this.resultado = resultado;
     }
@@ -49,44 +51,47 @@ public class UsuarioJogoDTO {
         this.personagem = personagem;
     }
 
-    public String getAmbiente() {
-        return ambiente;
+   
+
+  
+
+    public int getAcertoCasa() {
+        return acertoCasa;
     }
 
-    public void setAmbiente(String ambiente) {
-        this.ambiente = ambiente;
+    public void setAcertoCasa(int acertoCasa) {
+        this.acertoCasa = acertoCasa;
     }
 
-    public int getAcertos() {
-        return acertos;
+    public int getAcertoParque() {
+        return acertoParque;
     }
 
-    public void setAcertos(int acertos) {
-        this.acertos = acertos;
+    public void setAcertoParque(int acertoParque) {
+        this.acertoParque = acertoParque;
     }
 
-    public int getTotal() {
-        return total;
+    public int getAcertoUniversidade() {
+        return acertoUniversidade;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
+    public void setAcertoUniversidade(int acertoUniversidade) {
+        this.acertoUniversidade = acertoUniversidade;
     }
 
-    public String getAcertoPorAmbiente() {
-        return acertoPorAmbiente;
+    public int getTotalAcertos() {
+        return totalAcertos;
     }
 
-    public void setAcertoPorAmbiente(String acertoPorAmbiente) {
-        this.acertoPorAmbiente = acertoPorAmbiente;
+    public void setTotalAcertos(int totalAcertos) {
+        this.totalAcertos = totalAcertos;
     }
 
     public LocalDate getData() {
         return data;
     }
 
-    public void setData(LocalDate
-     data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 
@@ -104,10 +109,11 @@ public class UsuarioJogoDTO {
         return "UsuarioJogoDTO{" +
                 "id=" + id +
                 ", personagem='" + personagem + '\'' +
-                ", ambiente='" + ambiente + '\'' +
-                ", acertos=" + acertos +
-                ", total=" + total +
-                ", acertoPorAmbiente='" + acertoPorAmbiente + '\'' +
+                
+                ", acertoCasa=" + acertoCasa +
+                ", acertoParque=" + acertoParque +
+                ", acertoUniversidade=" + acertoUniversidade +
+                ", totalAcertos=" + totalAcertos +
                 ", data=" + data +
                 ", resultado=" + resultado +
                 '}';

@@ -11,7 +11,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")  // Permitir CORS para o frontend Angular
 @RestController
-@RequestMapping("/api/jogo")
+@RequestMapping("/api/usuario-jogo")  // Alterado para refletir mais claramente o propósito do endpoint
 public class UsuarioJogoController {
 
     private final UsuarioJogoService usuarioJogoService;
@@ -22,40 +22,42 @@ public class UsuarioJogoController {
     }
 
     /**
-     * Endpoint para criar um novo jogo.
+     * Endpoint para criar um novo registro de jogo de um usuário.
      * Recebe um DTO com as informações do jogo.
      */
     @PostMapping("/{usuarioId}")
-    public ResponseEntity<UsuarioJogoEntity> criarJogo(@PathVariable Long usuarioId, @RequestBody UsuarioJogoDTO jogoDTO) {
+    public ResponseEntity<UsuarioJogoEntity> criarRegistroJogo(@PathVariable Long usuarioId, @RequestBody UsuarioJogoDTO usuarioJogoDTO) {
         try {
-            UsuarioJogoEntity jogoCriado = usuarioJogoService.criarJogo(usuarioId, jogoDTO);
-            return new ResponseEntity<>(jogoCriado, HttpStatus.CREATED); // Retorna 201 Created
+            // Chamando o serviço para criar o registro de jogo do usuário
+            UsuarioJogoEntity usuarioJogoCriado = usuarioJogoService.criarJogo(usuarioId, usuarioJogoDTO);
+            return new ResponseEntity<>(usuarioJogoCriado, HttpStatus.CREATED); // Retorna 201 Created
         } catch (Exception e) {
-            return new ResponseEntity<> ( HttpStatus.BAD_REQUEST); // Caso haja algum erro
+            // Mensagem de erro detalhada no catch para facilitar o debug
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Caso haja algum erro, retorna 400 Bad Request
         }
     }
 
     /**
-     * Endpoint para listar todos os jogos de um usuário.
+     * Endpoint para listar todos os registros de jogos de um usuário.
      */
     @GetMapping("/{usuarioId}")
-    public ResponseEntity<List<UsuarioJogoEntity>> listarJogos(@PathVariable Long usuarioId) {
-        List<UsuarioJogoEntity> jogos = usuarioJogoService.listarJogosPorUsuario(usuarioId);
-        if (jogos.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Caso não encontre jogos
+    public ResponseEntity<List<UsuarioJogoEntity>> listarRegistrosJogos(@PathVariable Long usuarioId) {
+        List<UsuarioJogoEntity> registrosJogos = usuarioJogoService.listarJogosPorUsuario(usuarioId);
+        if (registrosJogos.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Retorna 204 No Content caso não haja jogos
         }
-        return new ResponseEntity<>(jogos, HttpStatus.OK);
+        return new ResponseEntity<>(registrosJogos, HttpStatus.OK); // Retorna 200 OK com os jogos
     }
 
     /**
-     * Endpoint para obter um jogo específico de um usuário.
+     * Endpoint para obter um registro específico de jogo de um usuário.
      */
-    @GetMapping("/{usuarioId}/{jogoId}")
-    public ResponseEntity<UsuarioJogoEntity> obterJogo(@PathVariable Long usuarioId, @PathVariable Long jogoId) {
-        UsuarioJogoEntity jogo = usuarioJogoService.obterJogoPorId(usuarioId, jogoId);
-        if (jogo == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Caso não encontre o jogo
+    @GetMapping("/{usuarioId}/{registroId}")
+    public ResponseEntity<UsuarioJogoEntity> obterRegistroJogo(@PathVariable Long usuarioId, @PathVariable Long registroId) {
+        UsuarioJogoEntity usuarioJogo = usuarioJogoService.obterJogoPorId(usuarioId, registroId);
+        if (usuarioJogo == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Retorna 404 Not Found se o jogo não for encontrado
         }
-        return new ResponseEntity<>(jogo, HttpStatus.OK);
+        return new ResponseEntity<>(usuarioJogo, HttpStatus.OK); // Retorna 200 OK com o jogo encontrado
     }
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "tb_jogo_usuario")
+@Table(name = "tb_usuario_jogo")
 public class UsuarioJogoEntity {
 
     @Id
@@ -12,48 +12,47 @@ public class UsuarioJogoEntity {
     private Long id;  // ID único para cada jogo do usuário
 
     @ManyToOne(fetch = FetchType.LAZY)  // Relacionamento ManyToOne com UsuarioEntity
-    @JoinColumn(name = "usuario_id", nullable = false)  // Nome da chave estrangeira (coluna na tabela)
+  @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)  // Nome da chave estrangeira (coluna na tabela)
     private UsuarioEntity usuario;  // A referência ao usuário associado ao jogo
 
     @Column(nullable = false)
     private String personagem; // Nome ou identificação do personagem no jogo
 
-    @Column(nullable = false)
-    private String ambiente; // Ambiente em que o jogo ocorreu (ex: "casa", "rua", etc.)
+    // Ambiente em que o jogo ocorreu (ex: "casa", "rua", etc.)
 
-    @Column(nullable = false)
-    private int acertos; // Número de acertos no jogo
+    @Column(name = "acerto_casa", nullable = false)
+    private int acertoCasa;  // Acertos na fase Casa
 
-    @Column(nullable = false)
-    private int total; // Total de tentativas no jogo
+    @Column(name = "acerto_parque", nullable = false)
+    private int acertoParque; // Acertos na fase Parque
 
-    @Column(name = "acerto_por_ambiente", nullable = false)
-    private String acertoPorAmbiente; // Desempenho no formato "1 de 11"
+    @Column(name = "acerto_universidade", nullable = false)
+    private int acertoUniversidade; // Acertos na fase Universidade
+
+    @Column(name = "total_acertos", nullable = false)
+    private int totalAcertos;  // Total de acertos
 
     @Column(name = "data_jogo", nullable = false)
     private LocalDate data; // Data em que o jogo foi realizado
-
-    @Column(nullable = false)
-    private boolean resultado; // Resultado do jogo (true = vitória, false = derrota)
 
     // Construtor vazio (necessário para JPA)
     public UsuarioJogoEntity() {}
 
     // Construtor com todos os campos
-    public UsuarioJogoEntity(UsuarioEntity usuario, String personagem, String ambiente, int acertos, 
-                              int total, String acertoPorAmbiente, LocalDate data, boolean resultado) {
+    public UsuarioJogoEntity(UsuarioEntity usuario, String personagem,  
+                              int acertoCasa, int acertoParque, int acertoUniversidade, 
+                              int totalAcertos, LocalDate data) {
         this.usuario = usuario;
         this.personagem = personagem;
-        this.ambiente = ambiente;
-        this.acertos = acertos;
-        this.total = total;
-        this.acertoPorAmbiente = acertoPorAmbiente;
+   
+        this.acertoCasa = acertoCasa;
+        this.acertoParque = acertoParque;
+        this.acertoUniversidade = acertoUniversidade;
+        this.totalAcertos = totalAcertos;
         this.data = data;
-        this.resultado = resultado;
     }
 
     // Getters e Setters
-
     public Long getId() {
         return id;
     }
@@ -78,36 +77,39 @@ public class UsuarioJogoEntity {
         this.personagem = personagem;
     }
 
-    public String getAmbiente() {
-        return ambiente;
+   
+   
+
+    public int getAcertoCasa() {
+        return acertoCasa;
     }
 
-    public void setAmbiente(String ambiente) {
-        this.ambiente = ambiente;
+    public void setAcertoCasa(int acertoCasa) {
+        this.acertoCasa = acertoCasa;
     }
 
-    public int getAcertos() {
-        return acertos;
+    public int getAcertoParque() {
+        return acertoParque;
     }
 
-    public void setAcertos(int acertos) {
-        this.acertos = acertos;
+    public void setAcertoParque(int acertoParque) {
+        this.acertoParque = acertoParque;
     }
 
-    public int getTotal() {
-        return total;
+    public int getAcertoUniversidade() {
+        return acertoUniversidade;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
+    public void setAcertoUniversidade(int acertoUniversidade) {
+        this.acertoUniversidade = acertoUniversidade;
     }
 
-    public String getAcertoPorAmbiente() {
-        return acertoPorAmbiente;
+    public int getTotalAcertos() {
+        return totalAcertos;
     }
 
-    public void setAcertoPorAmbiente(String acertoPorAmbiente) {
-        this.acertoPorAmbiente = acertoPorAmbiente;
+    public void setTotalAcertos(int totalAcertos) {
+        this.totalAcertos = totalAcertos;
     }
 
     public LocalDate getData() {
@@ -118,14 +120,6 @@ public class UsuarioJogoEntity {
         this.data = data;
     }
 
-    public boolean isResultado() {
-        return resultado;
-    }
-
-    public void setResultado(boolean resultado) {
-        this.resultado = resultado;
-    }
-
     // Método útil para representar o objeto em forma de string (opcional)
     @Override
     public String toString() {
@@ -133,12 +127,12 @@ public class UsuarioJogoEntity {
                 "id=" + id +
                 ", usuario=" + usuario.getNome() +  // Representando nome do usuário no toString
                 ", personagem='" + personagem + '\'' +
-                ", ambiente='" + ambiente + '\'' +
-                ", acertos=" + acertos +
-                ", total=" + total +
-                ", acertoPorAmbiente='" + acertoPorAmbiente + '\'' +
+                //", ambientes='\Todos' +
+                ", acertoCasa=" + acertoCasa +
+                ", acertoParque=" + acertoParque +
+                ", acertoUniversidade=" + acertoUniversidade +
+                ", totalAcertos=" + totalAcertos +
                 ", data=" + data +
-                ", resultado=" + resultado +
                 '}';
     }
 }
