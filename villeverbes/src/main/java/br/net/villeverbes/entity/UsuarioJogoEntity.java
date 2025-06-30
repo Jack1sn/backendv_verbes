@@ -3,6 +3,8 @@ package br.net.villeverbes.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "tb_usuario_jogo")
 public class UsuarioJogoEntity {
@@ -12,8 +14,9 @@ public class UsuarioJogoEntity {
     private Long id;  // ID único para cada jogo do usuário
 
     @ManyToOne(fetch = FetchType.LAZY)  // Relacionamento ManyToOne com UsuarioEntity
-  @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)  // Nome da chave estrangeira (coluna na tabela)
-    private UsuarioEntity usuario;  // A referência ao usuário associado ao jogo
+  @JoinColumn(name = "usuario_id", nullable = false, unique = false)  // Nome da chave estrangeira (coluna na tabela)
+  @JsonIgnore  
+  private UsuarioEntity usuario;  // A referência ao usuário associado ao jogo
 
     @Column(nullable = false)
     private String personagem; // Nome ou identificação do personagem no jogo

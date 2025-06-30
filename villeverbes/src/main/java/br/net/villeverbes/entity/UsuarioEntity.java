@@ -2,6 +2,8 @@ package br.net.villeverbes.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -50,6 +52,9 @@ public class UsuarioEntity {
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
     }
+       // Aqui está o relacionamento com jogos
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<UsuarioJogoEntity> jogos = new ArrayList<>();
     // Construtor padrão obrigatório para o JPA
     public UsuarioEntity() {
     }

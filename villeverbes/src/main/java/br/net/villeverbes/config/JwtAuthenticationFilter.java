@@ -70,13 +70,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         new PublicEndpoint("POST", "/api/complementos"),
 
         // Endpoints de jogo públicos (ajuste conforme sua regra de segurança)
-        new PublicEndpoint("POST", "/api/jogo/**"),
-        new PublicEndpoint("GET", "/api/jogo/**"),
-        new PublicEndpoint("PUT", "/api/jogo/**"),
-        new PublicEndpoint("DELETE", "/api/jogo/**"),
-        new PublicEndpoint("POST", "/api/jogo"),
-          new PublicEndpoint("POST", "/api/jogo/*"),
-        new PublicEndpoint("POST", "/api/jogo/{usuarioId}")
+        new PublicEndpoint("POST", "/api/jogos/**"),
+        new PublicEndpoint("GET", "/api/jogos/**"),
+        new PublicEndpoint("PUT", "/api/jogos/**"),
+        new PublicEndpoint("DELETE", "/api/jogos/**"),
+        new PublicEndpoint("POST", "/api/jogos"),
+          new PublicEndpoint("POST", "/api/jogos/*"),
+        new PublicEndpoint("POST", "/api/jogos/{usuarioId}")
 
 
     );

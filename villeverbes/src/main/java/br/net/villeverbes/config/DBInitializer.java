@@ -139,13 +139,13 @@ public class DBInitializer {
                         new ComplementoEntity("en famille"),
                         new ComplementoEntity("dix heures"),
                         new ComplementoEntity("la musique"),
-                           new ComplementoEntity("le dîner"),
-                         new ComplementoEntity("à la maison"),
+                        new ComplementoEntity("le dîner"),
+                       new ComplementoEntity("à la maison"),
                         new ComplementoEntity("les informations"),
-                          new ComplementoEntity("du ménage"),
-                            new ComplementoEntity("le film"), 
-                             new ComplementoEntity("la radio"),
-                              new ComplementoEntity("la chambre")      // Adicionando "la musique"
+                        new ComplementoEntity("du ménage"),
+                        new ComplementoEntity("le film"), 
+                        new ComplementoEntity("la radio"),
+                             new ComplementoEntity("la chambre")      // Adicionando "la musique"
                 ));
             }
 
@@ -219,7 +219,7 @@ public class DBInitializer {
                     new FraseAmbienteCasaEntity(
                         buscarPronome("tu", pronomeRepository),
                         buscarVerbo("répéter", verboRepository),
-                        buscarComplemento("les devoirs", complementoRepository),
+                        buscarComplemento("mes devoirs", complementoRepository),
                         presente,
                         "répètes"
                     ),

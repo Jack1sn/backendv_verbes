@@ -66,11 +66,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/frases/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/frases/").permitAll() 
                 // Endpoints de jogo públicos
-                .requestMatchers(HttpMethod.GET, "/api/jogo/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/jogo/**").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/api/jogo/**").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/jogo/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/jogo").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/jogos/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/jogos/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/jogos/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/jogos/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/s").permitAll()
 
                 // Endpoints protegidos (necessita autenticação)
                 .requestMatchers(HttpMethod.PUT, "/usuario/colaboradores").authenticated()

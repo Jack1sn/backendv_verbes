@@ -36,4 +36,11 @@ public class SeloMedalhaService {
             return null;
         }
     }
+
+
+    public void incrementarMedalha(SeloMedalhaEntity seloMedalha) {
+    seloMedalha.setMedalha(seloMedalha.getMedalha() + 1);
+    seloMedalhaRepository.save(seloMedalha);
+}
+
 }
