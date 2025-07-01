@@ -14,7 +14,7 @@ public class TempoVerbalDTO {
         this.tempo = tempo;
     }
 
-    // Getters e Setters
+  
     public Long getId() {
         return id;
     }

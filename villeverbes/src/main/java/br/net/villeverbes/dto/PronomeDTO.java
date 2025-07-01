@@ -8,7 +8,7 @@ public class PronomeDTO {
     private Long id;
     private String texto;
 
-    // Construtores
+   
     public PronomeDTO() {}
 
     public PronomeDTO(Long id, String texto) {
@@ -17,7 +17,7 @@ public class PronomeDTO {
         
     }
 
-    // Getters e Setters
+   
     public Long getId() {
         return id;
     }
