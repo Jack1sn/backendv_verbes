@@ -13,7 +13,7 @@ public class SeloMedalhaEntity {
 
     // Relacionamento com a tabela "tb_usuario_jogo"
     @ManyToOne(fetch = FetchType.LAZY)  // Usar o LAZY para carregar o relacionamento apenas quando necessário
-    @JoinColumn(name = "usuario_id", referencedColumnName = "id") // Chave estrangeira para a tabela "tb_usuario_jogo"
+    @JoinColumn(name = "usuario_id", referencedColumnName = "usuario_id") // Chave estrangeira para a tabela "tb_usuario_jogo"
     private UsuarioJogoEntity usuarioJogo;
 
     // Campos inteiros para indicar o status de cada selo e medalha
