@@ -100,4 +100,16 @@ public class UsuarioJogoController {
             return ResponseEntity.notFound().build();
         }
     }
+@PostMapping("/{usuarioId}/todos")
+public ResponseEntity<?> salvarTodosJogos(@PathVariable Long usuarioId, @RequestBody List<UsuarioJogoDTO> jogos) {
+    if (jogos == null || jogos.isEmpty()) {
+        return ResponseEntity.badRequest().body("Lista de jogos está vazia.");
+    }
+
+    UsuarioJogoDTO ultimoJogo = jogos.get(jogos.size() - 1);
+    usuarioJogoService.criarJogo(usuarioId, ultimoJogo);  // aqui manda só o último jogo
+    return ResponseEntity.ok("Último jogo foi salvo com sucesso.");
+}
+
+
 }

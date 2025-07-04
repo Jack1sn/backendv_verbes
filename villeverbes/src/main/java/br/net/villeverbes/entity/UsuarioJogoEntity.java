@@ -14,23 +14,24 @@ public class UsuarioJogoEntity {
     private Long id;  // ID único para cada jogo do usuário
 
     @ManyToOne(fetch = FetchType.LAZY)  // Relacionamento ManyToOne com UsuarioEntity
-  @JoinColumn(name = "usuario_id", nullable = false, unique = false)  // Nome da chave estrangeira (coluna na tabela)
+  @JoinColumn(name = "usuario_id",referencedColumnName = "id", nullable = false)  // Nome da chave estrangeira (coluna na tabela)
   @JsonIgnore  
   private UsuarioEntity usuario;  // A referência ao usuário associado ao jogo
 
     @Column(nullable = false)
     private String personagem; // Nome ou identificação do personagem no jogo
 
-    // Ambiente em que o jogo ocorreu (ex: "casa", "rua", etc.)
+    @Column(name = "nome_usuario", nullable = true)
+    private String nomeUsuario;
 
-    @Column(name = "acerto_casa", nullable = false)
-    private int acertoCasa;  // Acertos na fase Casa
+    @Column(name = "acertos_casa", nullable = false)
+    private int acertosCasa;  // Acertos na fase Casa
 
-    @Column(name = "acerto_parque", nullable = false)
-    private int acertoParque; // Acertos na fase Parque
+    @Column(name = "acertos_parque", nullable = false)
+    private int acertosParque; // Acertos na fase Parque
 
-    @Column(name = "acerto_universidade", nullable = false)
-    private int acertoUniversidade; // Acertos na fase Universidade
+    @Column(name = "acertos_universidade", nullable = false)
+    private int acertosUniversidade; // Acertos na fase Universidade
 
     @Column(name = "total_acertos", nullable = false)
     private int totalAcertos;  // Total de acertos
@@ -42,15 +43,15 @@ public class UsuarioJogoEntity {
     public UsuarioJogoEntity() {}
 
     // Construtor com todos os campos
-    public UsuarioJogoEntity(UsuarioEntity usuario, String personagem,  
-                              int acertoCasa, int acertoParque, int acertoUniversidade, 
+    public UsuarioJogoEntity(UsuarioEntity usuario, String personagem, String nomeUsuario, 
+                              int acertosCasa, int acertosParque, int acertosUniversidade, 
                               int totalAcertos, LocalDate data) {
         this.usuario = usuario;
         this.personagem = personagem;
-   
-        this.acertoCasa = acertoCasa;
-        this.acertoParque = acertoParque;
-        this.acertoUniversidade = acertoUniversidade;
+        this.nomeUsuario = nomeUsuario;
+        this.acertosCasa = acertosCasa;
+        this.acertosParque = acertosParque;
+        this.acertosUniversidade = acertosUniversidade;
         this.totalAcertos = totalAcertos;
         this.data = data;
     }
@@ -80,31 +81,37 @@ public class UsuarioJogoEntity {
         this.personagem = personagem;
     }
 
+   public String getNomeUsuario() {
+        return nomeUsuario;
+    }
+
+    public void setNomeUsuario(String nomeUsuario) {
+        this.nomeUsuario = nomeUsuario;
+    }
    
-   
 
-    public int getAcertoCasa() {
-        return acertoCasa;
+    public int getAcertosCasa() {
+        return acertosCasa;
     }
 
-    public void setAcertoCasa(int acertoCasa) {
-        this.acertoCasa = acertoCasa;
+    public void setAcertosCasa(int acertosCasa) {
+        this.acertosCasa = acertosCasa;
     }
 
-    public int getAcertoParque() {
-        return acertoParque;
+    public int getAcertosParque() {
+        return acertosParque;
     }
 
-    public void setAcertoParque(int acertoParque) {
-        this.acertoParque = acertoParque;
+    public void setAcertosParque(int acertosParque) {
+        this.acertosParque = acertosParque;
     }
 
-    public int getAcertoUniversidade() {
-        return acertoUniversidade;
+    public int getAcertosUniversidade() {
+        return acertosUniversidade;
     }
 
-    public void setAcertoUniversidade(int acertoUniversidade) {
-        this.acertoUniversidade = acertoUniversidade;
+    public void setAcertosUniversidade(int acertosUniversidade) {
+        this.acertosUniversidade = acertosUniversidade;
     }
 
     public int getTotalAcertos() {
@@ -131,9 +138,9 @@ public class UsuarioJogoEntity {
                 ", usuario=" + usuario.getNome() +  // Representando nome do usuário no toString
                 ", personagem='" + personagem + '\'' +
                 //", ambientes='\Todos' +
-                ", acertoCasa=" + acertoCasa +
-                ", acertoParque=" + acertoParque +
-                ", acertoUniversidade=" + acertoUniversidade +
+                ", acertosCasa=" + acertosCasa +
+                ", acertosParque=" + acertosParque +
+                ", acertosUniversidade=" + acertosUniversidade +
                 ", totalAcertos=" + totalAcertos +
                 ", data=" + data +
                 '}';

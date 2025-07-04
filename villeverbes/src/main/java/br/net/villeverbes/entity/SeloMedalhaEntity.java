@@ -12,23 +12,28 @@ public class SeloMedalhaEntity {
     private Long id; // ID da tabela, gerado automaticamente
 
     // Relacionamento com a tabela "tb_usuario_jogo"
-    @ManyToOne(fetch = FetchType.LAZY)  // Usar o LAZY para carregar o relacionamento apenas quando necessário
-    @JoinColumn(name = "usuario_id", referencedColumnName = "usuario_id") // Chave estrangeira para a tabela "tb_usuario_jogo"
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", referencedColumnName = "id") // Chave estrangeira para a tabela "tb_usuario_jogo"
     private UsuarioJogoEntity usuarioJogo;
 
     // Campos inteiros para indicar o status de cada selo e medalha
-    private Integer seloCasa = 0; // Armazena o status do selo da Casa (0 = Não obtido, 1 = Obtido)
-    private Integer seloParque = 0; // Armazena o status do selo do Parque (0 = Não obtido, 1 = Obtido)
-    private Integer seloUniversidade = 0; // Armazena o valor incremental do selo da Universidade (0 = Não obtido, valores maiores conforme o progresso)
-    private Integer medalha = 0; // Armazena o status da medalha (0 = Não obtido, 1 = Obtido)
+    private Integer seloCasa = 0;
+    private Integer seloParque = 0;
+    private Integer seloUniversidade = 0;
+    private Integer medalha = 0;
+
+    // ✅ Novo campo personagem
+    @Column(name = "personagem", nullable = true)
+    private String personagem;
 
     // Construtor padrão
     public SeloMedalhaEntity() {
     }
 
-    // Construtor com parâmetros (útil para criação de objetos)
+    // Construtor com parâmetros
     public SeloMedalhaEntity(UsuarioJogoEntity usuarioJogo) {
         this.usuarioJogo = usuarioJogo;
+        this.personagem = usuarioJogo != null ? usuarioJogo.getPersonagem() : null; // Atribui automaticamente
     }
 
     // Getters e Setters
@@ -46,6 +51,7 @@ public class SeloMedalhaEntity {
 
     public void setUsuarioJogo(UsuarioJogoEntity usuarioJogo) {
         this.usuarioJogo = usuarioJogo;
+        this.personagem = usuarioJogo != null ? usuarioJogo.getPersonagem() : null; // Atualiza automaticamente
     }
 
     public Integer getSeloCasa() {
@@ -80,7 +86,14 @@ public class SeloMedalhaEntity {
         this.medalha = medalha;
     }
 
-    // Método toString atualizado
+    public String getPersonagem() {
+        return personagem;
+    }
+
+    public void setPersonagem(String personagem) {
+        this.personagem = personagem;
+    }
+
     @Override
     public String toString() {
         return "SeloMedalhaEntity{" +
@@ -90,10 +103,10 @@ public class SeloMedalhaEntity {
                 ", seloParque=" + seloParque +
                 ", seloUniversidade=" + seloUniversidade +
                 ", medalha=" + medalha +
+                ", personagem='" + personagem + '\'' +
                 '}';
     }
 
-    // Método hashCode e equals para garantir comparações de entidades corretamente
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

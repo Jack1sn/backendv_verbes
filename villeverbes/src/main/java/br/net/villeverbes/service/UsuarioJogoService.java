@@ -33,9 +33,9 @@ public class UsuarioJogoService {
         UsuarioJogoEntity usuarioJogo = new UsuarioJogoEntity();
         usuarioJogo.setUsuario(usuario);
         usuarioJogo.setPersonagem(jogoDTO.getPersonagem());
-        usuarioJogo.setAcertoCasa(jogoDTO.getAcertoCasa());
-        usuarioJogo.setAcertoParque(jogoDTO.getAcertoParque());
-        usuarioJogo.setAcertoUniversidade(jogoDTO.getAcertoUniversidade());
+        usuarioJogo.setAcertosCasa(jogoDTO.getAcertosCasa());
+        usuarioJogo.setAcertosParque(jogoDTO.getAcertosParque());
+        usuarioJogo.setAcertosUniversidade(jogoDTO.getAcertosUniversidade());
 
         // Calculando o total de acertos
         usuarioJogo.setTotalAcertos(calcularTotalAcertos(jogoDTO));
@@ -81,9 +81,9 @@ public class UsuarioJogoService {
 
         // Atualiza os campos do jogo
         usuarioJogo.setPersonagem(jogoDTO.getPersonagem());
-        usuarioJogo.setAcertoCasa(jogoDTO.getAcertoCasa());
-        usuarioJogo.setAcertoParque(jogoDTO.getAcertoParque());
-        usuarioJogo.setAcertoUniversidade(jogoDTO.getAcertoUniversidade());
+        usuarioJogo.setAcertosCasa(jogoDTO.getAcertosCasa());
+        usuarioJogo.setAcertosParque(jogoDTO.getAcertosParque());
+        usuarioJogo.setAcertosUniversidade(jogoDTO.getAcertosUniversidade());
 
         // Calculando o total de acertos
         usuarioJogo.setTotalAcertos(calcularTotalAcertos(jogoDTO));
@@ -109,7 +109,7 @@ public class UsuarioJogoService {
      * Valida os dados do DTO.
      */
     private void validarJogoDTO(UsuarioJogoDTO jogoDTO) {
-        if (jogoDTO.getAcertoCasa() < 0 || jogoDTO.getAcertoParque() < 0 || jogoDTO.getAcertoUniversidade() < 0) {
+        if (jogoDTO.getAcertosCasa() < 0 || jogoDTO.getAcertosParque() < 0 || jogoDTO.getAcertosUniversidade() < 0) {
             throw new IllegalArgumentException("Acertos não podem ser valores negativos.");
         }
     }
@@ -118,7 +118,7 @@ public class UsuarioJogoService {
      * Calcula o total de acertos a partir do DTO.
      */
     private int calcularTotalAcertos(UsuarioJogoDTO jogoDTO) {
-        return jogoDTO.getAcertoCasa() + jogoDTO.getAcertoParque() + jogoDTO.getAcertoUniversidade();
+        return jogoDTO.getAcertosCasa() + jogoDTO.getAcertosParque() + jogoDTO.getAcertosUniversidade();
     }
 
     /**
@@ -128,4 +128,25 @@ public class UsuarioJogoService {
         return usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));  // Exceção simples
     }
+
+    public void criarVariosJogos(Long usuarioId, List<UsuarioJogoDTO> jogosDTO) {
+    // Valida a existência do usuário apenas uma vez
+    UsuarioEntity usuario = buscarUsuario(usuarioId);
+
+    for (UsuarioJogoDTO jogoDTO : jogosDTO) {
+        validarJogoDTO(jogoDTO);
+
+        UsuarioJogoEntity usuarioJogo = new UsuarioJogoEntity();
+        usuarioJogo.setUsuario(usuario);
+        usuarioJogo.setPersonagem(jogoDTO.getPersonagem());
+        usuarioJogo.setAcertosCasa(jogoDTO.getAcertosCasa());
+        usuarioJogo.setAcertosParque(jogoDTO.getAcertosParque());
+        usuarioJogo.setAcertosUniversidade(jogoDTO.getAcertosUniversidade());
+        usuarioJogo.setTotalAcertos(calcularTotalAcertos(jogoDTO));
+        usuarioJogo.setData(LocalDate.now());
+
+        usuarioJogoRepository.save(usuarioJogo);
+    }
+}
+
 }
