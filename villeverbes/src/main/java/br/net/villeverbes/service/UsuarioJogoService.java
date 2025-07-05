@@ -1,14 +1,19 @@
 package br.net.villeverbes.service;
 
 import br.net.villeverbes.dto.UsuarioJogoDTO;
+import br.net.villeverbes.entity.SeloMedalhaEntity;
 import br.net.villeverbes.entity.UsuarioEntity;
 import br.net.villeverbes.entity.UsuarioJogoEntity;
+import br.net.villeverbes.repository.SeloMedalhaRepository;
 import br.net.villeverbes.repository.UsuarioJogoRepository;
 import br.net.villeverbes.repository.UsuarioRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioJogoService {
@@ -129,8 +134,7 @@ public class UsuarioJogoService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));  // Exceção simples
     }
 
-    public void criarVariosJogos(Long usuarioId, List<UsuarioJogoDTO> jogosDTO) {
-    // Valida a existência do usuário apenas uma vez
+public void criarVariosJogos(Long usuarioId, List<UsuarioJogoDTO> jogosDTO) {
     UsuarioEntity usuario = buscarUsuario(usuarioId);
 
     for (UsuarioJogoDTO jogoDTO : jogosDTO) {
@@ -145,8 +149,39 @@ public class UsuarioJogoService {
         usuarioJogo.setTotalAcertos(calcularTotalAcertos(jogoDTO));
         usuarioJogo.setData(LocalDate.now());
 
-        usuarioJogoRepository.save(usuarioJogo);
+        // método que contém a lógica dos selos
+        salvarComSelo(usuarioJogo);
     }
 }
+
+@Autowired
+private SeloMedalhaRepository seloMedalhaRepository;
+
+
+
+public void salvarComSelo(UsuarioJogoEntity jogoEntity) {
+    // Salva o jogo primeiro e obtém o ID
+    UsuarioJogoEntity jogoSalvo = usuarioJogoRepository.save(jogoEntity);
+
+    boolean casa11 = jogoSalvo.getAcertosCasa() == 11;
+    boolean parque11 = jogoSalvo.getAcertosParque() == 11;
+    boolean universidade11 = jogoSalvo.getAcertosUniversidade() == 11;
+    boolean ganhouMedalha = casa11 && parque11 && universidade11;
+
+    // Agora o jogoSalvo tem ID, pode buscar corretamente
+    Optional<SeloMedalhaEntity> optionalSelo = seloMedalhaRepository.findByUsuarioJogo(jogoEntity);
+
+
+    SeloMedalhaEntity selo = optionalSelo.orElseGet(() -> new SeloMedalhaEntity(jogoSalvo));
+
+    if (casa11) selo.setSeloCasa(selo.getSeloCasa() + 1);
+    if (parque11) selo.setSeloParque(selo.getSeloParque() + 1);
+    if (universidade11) selo.setSeloUniversidade(selo.getSeloUniversidade() + 1);
+    if (ganhouMedalha) selo.setMedalha(selo.getMedalha() + 1);
+
+    seloMedalhaRepository.save(selo);
+}
+
+
 
 }

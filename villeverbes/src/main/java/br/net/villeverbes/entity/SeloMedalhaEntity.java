@@ -9,31 +9,39 @@ public class SeloMedalhaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "selo_medalha_id")
-    private Long id; // ID da tabela, gerado automaticamente
+    private Long id;
 
-    // Relacionamento com a tabela "tb_usuario_jogo"
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", referencedColumnName = "id") // Chave estrangeira para a tabela "tb_usuario_jogo"
+    @JoinColumn(name = "usuario_jogo_id", nullable = false, unique = true) // id do jogo
     private UsuarioJogoEntity usuarioJogo;
 
-    // Campos inteiros para indicar o status de cada selo e medalha
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)  // referência para o usuário
+    private UsuarioEntity usuario;  
+
+    @Column(name = "selo_casa")
     private Integer seloCasa = 0;
+
+    @Column(name = "selo_parque")
     private Integer seloParque = 0;
+
+    @Column(name = "selo_universidade")
     private Integer seloUniversidade = 0;
+
+    @Column(name = "medalha")
     private Integer medalha = 0;
 
-    // ✅ Novo campo personagem
-    @Column(name = "personagem", nullable = true)
+    @Column(name = "personagem")
     private String personagem;
 
     // Construtor padrão
-    public SeloMedalhaEntity() {
-    }
+    public SeloMedalhaEntity() {}
 
-    // Construtor com parâmetros
+    // Construtor com lógica automática do personagem e usuário
     public SeloMedalhaEntity(UsuarioJogoEntity usuarioJogo) {
         this.usuarioJogo = usuarioJogo;
-        this.personagem = usuarioJogo != null ? usuarioJogo.getPersonagem() : null; // Atribui automaticamente
+        this.usuario = usuarioJogo != null ? usuarioJogo.getUsuario() : null;  // Pega usuário do jogo
+        this.personagem = usuarioJogo != null ? usuarioJogo.getPersonagem() : null;
     }
 
     // Getters e Setters
@@ -51,7 +59,16 @@ public class SeloMedalhaEntity {
 
     public void setUsuarioJogo(UsuarioJogoEntity usuarioJogo) {
         this.usuarioJogo = usuarioJogo;
-        this.personagem = usuarioJogo != null ? usuarioJogo.getPersonagem() : null; // Atualiza automaticamente
+        this.usuario = usuarioJogo != null ? usuarioJogo.getUsuario() : null;
+        this.personagem = usuarioJogo != null ? usuarioJogo.getPersonagem() : null;
+    }
+
+    public UsuarioEntity getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioEntity usuario) {
+        this.usuario = usuario;
     }
 
     public Integer getSeloCasa() {
@@ -98,25 +115,13 @@ public class SeloMedalhaEntity {
     public String toString() {
         return "SeloMedalhaEntity{" +
                 "id=" + id +
-                ", usuarioJogo=" + (usuarioJogo != null ? usuarioJogo.getId() : "não atribuído") +
+                ", usuarioJogoId=" + (usuarioJogo != null ? usuarioJogo.getId() : "null") +
+                ", usuarioId=" + (usuario != null ? usuario.getId() : "null") +
                 ", seloCasa=" + seloCasa +
                 ", seloParque=" + seloParque +
                 ", seloUniversidade=" + seloUniversidade +
                 ", medalha=" + medalha +
                 ", personagem='" + personagem + '\'' +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SeloMedalhaEntity that = (SeloMedalhaEntity) o;
-        return id != null && id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
     }
 }
