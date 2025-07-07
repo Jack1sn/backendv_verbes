@@ -1,25 +1,36 @@
-
 package br.net.villeverbes.dto;
 
 public class SeloMedalhaDTO {
 
     private Long id;
-    private Long usuarioJogoId; // Aqui você pode armazenar apenas o ID do usuário do jogo
+    private Long usuarioJogoId;
     private int seloCasa;
     private int seloParque;
     private int seloUniversidade;
     private int medalha;
+    private int posicao;
+    private String personagem; // NOVO CAMPO
 
-    // Construtores, Getters e Setters
-    public SeloMedalhaDTO(Long id, Long usuarioJogoId, int seloCasa, int seloParque, int seloUniversidade, int medalha) {
+    // Construtor completo COM personagem
+    public SeloMedalhaDTO(Long id, Long usuarioJogoId, int seloCasa, int seloParque,
+                          int seloUniversidade, int medalha, int posicao, String personagem) {
         this.id = id;
         this.usuarioJogoId = usuarioJogoId;
         this.seloCasa = seloCasa;
         this.seloParque = seloParque;
         this.seloUniversidade = seloUniversidade;
         this.medalha = medalha;
+        this.posicao = posicao;
+        this.personagem = personagem;
     }
 
+    // Construtor sem personagem
+    public SeloMedalhaDTO(Long id, Long usuarioJogoId, int seloCasa, int seloParque,
+                          int seloUniversidade, int medalha, int posicao) {
+        this(id, usuarioJogoId, seloCasa, seloParque, seloUniversidade, medalha, posicao, null);
+    }
+
+    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -66,5 +77,21 @@ public class SeloMedalhaDTO {
 
     public void setMedalha(int medalha) {
         this.medalha = medalha;
+    }
+
+    public int getPosicao() {
+        return posicao;
+    }
+
+    public void setPosicao(int posicao) {
+        this.posicao = posicao;
+    }
+
+    public String getPersonagem() {
+        return personagem;
+    }
+
+    public void setPersonagem(String personagem) {
+        this.personagem = personagem;
     }
 }

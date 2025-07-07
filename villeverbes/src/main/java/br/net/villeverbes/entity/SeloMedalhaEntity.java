@@ -12,12 +12,12 @@ public class SeloMedalhaEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_jogo_id", nullable = false, unique = true) // id do jogo
+    @JoinColumn(name = "usuario_jogo_id", nullable = false, unique = true)
     private UsuarioJogoEntity usuarioJogo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)  // referência para o usuário
-    private UsuarioEntity usuario;  
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private UsuarioEntity usuario;
 
     @Column(name = "selo_casa")
     private Integer seloCasa = 0;
@@ -31,8 +31,12 @@ public class SeloMedalhaEntity {
     @Column(name = "medalha")
     private Integer medalha = 0;
 
+    
     @Column(name = "personagem")
     private String personagem;
+
+    @Column(name = "posicao")
+    private Integer posicao; // Novo campo adicionado
 
     // Construtor padrão
     public SeloMedalhaEntity() {}
@@ -40,7 +44,7 @@ public class SeloMedalhaEntity {
     // Construtor com lógica automática do personagem e usuário
     public SeloMedalhaEntity(UsuarioJogoEntity usuarioJogo) {
         this.usuarioJogo = usuarioJogo;
-        this.usuario = usuarioJogo != null ? usuarioJogo.getUsuario() : null;  // Pega usuário do jogo
+        this.usuario = usuarioJogo != null ? usuarioJogo.getUsuario() : null;
         this.personagem = usuarioJogo != null ? usuarioJogo.getPersonagem() : null;
     }
 
@@ -111,6 +115,14 @@ public class SeloMedalhaEntity {
         this.personagem = personagem;
     }
 
+    public Integer getPosicao() {
+        return posicao;
+    }
+
+    public void setPosicao(Integer posicao) {
+        this.posicao = posicao;
+    }
+
     @Override
     public String toString() {
         return "SeloMedalhaEntity{" +
@@ -122,6 +134,7 @@ public class SeloMedalhaEntity {
                 ", seloUniversidade=" + seloUniversidade +
                 ", medalha=" + medalha +
                 ", personagem='" + personagem + '\'' +
+                ", posicao=" + posicao +
                 '}';
     }
 }

@@ -70,7 +70,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/jogos/**").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/jogos/**").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/api/jogos/**").permitAll()
+                 .requestMatchers("/api/selos/usuario/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/s").permitAll()
+                 .requestMatchers("/api/selos/**").permitAll() 
 
                 // Endpoints protegidos (necessita autenticação)
                 .requestMatchers(HttpMethod.PUT, "/usuario/colaboradores").authenticated()
