@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         new PublicEndpoint("POST", "/api/frases"),
         new PublicEndpoint("POST", "/api/frases/{id}"),
         new PublicEndpoint("POST", "/api/frases/**"),
-         //new PublicEndpoint("PUT", "/api/frases/{id}"),
+         new PublicEndpoint("DELETE", "/api/frases/{id}"),
         new PublicEndpoint("PUT", "/api/frases/**"),
         new PublicEndpoint("GET", "/api/frases/{id}"),
         new PublicEndpoint("GET", "/api/frases"),

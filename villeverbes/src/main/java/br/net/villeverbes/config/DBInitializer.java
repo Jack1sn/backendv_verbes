@@ -193,39 +193,39 @@ public class DBInitializer {
                 List<FraseAmbienteCasaEntity> frases = List.of(
 
                 new FraseAmbienteCasaEntity(
-    buscarPronome("je", pronomeRepository),
+    buscarPronome("Je", pronomeRepository),
     buscarVerbo("regarder", verboRepository),
-    buscarComplemento("le tableau", complementoRepository), // quadro
+    buscarComplemento("le tableau.", complementoRepository), // quadro
     presente,
     "regarde"
 ),
 
 new FraseAmbienteCasaEntity(
-    buscarPronome("tu", pronomeRepository),
+    buscarPronome("Il", pronomeRepository),
     buscarVerbo("arroser", verboRepository),
-    buscarComplemento("la fleur", complementoRepository), // flor
+    buscarComplemento("la fleur.", complementoRepository), // flor
     presente,
-    "arroses"
+    "arrose"
 ),
 
 new FraseAmbienteCasaEntity(
-    buscarPronome("il", pronomeRepository),
+    buscarPronome("Il", pronomeRepository),
     buscarVerbo("allumer", verboRepository),
-    buscarComplemento("l'abat-jour", complementoRepository), // abajur
+    buscarComplemento("l'abat-jour.", complementoRepository), // abajur
     presente,
     "allume"
 ),
 
 new FraseAmbienteCasaEntity(
-    buscarPronome("elle", pronomeRepository),
+    buscarPronome("Elle", pronomeRepository),
     buscarVerbo("regarder", verboRepository),
-    buscarComplemento("le miroir", complementoRepository), // espelho
+    buscarComplemento("le miroir.", complementoRepository), // espelho
     presente,
     "regarde"
 ),
 
 new FraseAmbienteCasaEntity(
-    buscarPronome("nous", pronomeRepository),
+    buscarPronome("Nous", pronomeRepository),
     buscarVerbo("nettoyer", verboRepository),
     buscarComplemento("la cheminée", complementoRepository), // chaminé
     presente,
@@ -233,7 +233,7 @@ new FraseAmbienteCasaEntity(
 ),
 
 new FraseAmbienteCasaEntity(
-    buscarPronome("elle", pronomeRepository),
+    buscarPronome("Elle", pronomeRepository),
     buscarVerbo("être", verboRepository),
     buscarComplemento("dans la cuisine", complementoRepository), // fogão
     presente,
@@ -241,7 +241,7 @@ new FraseAmbienteCasaEntity(
 ),
 
 new FraseAmbienteCasaEntity(
-    buscarPronome("ils", pronomeRepository),
+    buscarPronome("Ils", pronomeRepository),
     buscarVerbo("tirer", verboRepository),
     buscarComplemento("les chaises", complementoRepository), // cadeiras
     presente,
@@ -249,7 +249,7 @@ new FraseAmbienteCasaEntity(
 ),
 
 new FraseAmbienteCasaEntity(
-    buscarPronome("elles", pronomeRepository),
+    buscarPronome("Elles", pronomeRepository),
     buscarVerbo("mettre", verboRepository),
     buscarComplemento("la table", complementoRepository), // mesa
     presente,
@@ -257,7 +257,7 @@ new FraseAmbienteCasaEntity(
 ),
 
 new FraseAmbienteCasaEntity(
-    buscarPronome("je", pronomeRepository),
+    buscarPronome("Je", pronomeRepository),
     buscarVerbo("ouvrir", verboRepository),
     buscarComplemento("le rideau", complementoRepository), // cortina
     presente,
@@ -265,7 +265,7 @@ new FraseAmbienteCasaEntity(
 ),
 
 new FraseAmbienteCasaEntity(
-    buscarPronome("tu", pronomeRepository),
+    buscarPronome("Tu", pronomeRepository),
     buscarVerbo("fermer", verboRepository),
     buscarComplemento("la porte", complementoRepository), // porta
     presente,
@@ -273,7 +273,7 @@ new FraseAmbienteCasaEntity(
 ),
 
 new FraseAmbienteCasaEntity(
-    buscarPronome("nous", pronomeRepository),
+    buscarPronome("Nous", pronomeRepository),
     buscarVerbo("nettoyer", verboRepository),
     buscarComplemento("le canapé", complementoRepository), // sofá
     presente,
@@ -282,49 +282,49 @@ new FraseAmbienteCasaEntity(
 
                  
                     new FraseAmbienteCasaEntity(
-                        buscarPronome("tu", pronomeRepository),
+                        buscarPronome("Tu", pronomeRepository),
                         buscarVerbo("aller", verboRepository),
                         buscarComplemento("à l'école", complementoRepository),
                         presente,
                         "vas"
                     ),
                     new FraseAmbienteCasaEntity(
-                        buscarPronome("il", pronomeRepository),
+                        buscarPronome("Il", pronomeRepository),
                         buscarVerbo("lire", verboRepository),
                         buscarComplemento("un livre", complementoRepository),
                         presente,
                         "lit"
                     ),
                     new FraseAmbienteCasaEntity(
-                        buscarPronome("elle", pronomeRepository),
+                        buscarPronome("Elle", pronomeRepository),
                         buscarVerbo("faire", verboRepository),
                         buscarComplemento("du sport", complementoRepository),
                          presente,
                         "fait"
                     ),
                     new FraseAmbienteCasaEntity(
-                        buscarPronome("nous", pronomeRepository),
+                        buscarPronome("Nous", pronomeRepository),
                         buscarVerbo("regarder", verboRepository),
-                        buscarComplemento("la télévision", complementoRepository),
+                        buscarComplemento("le tableau", complementoRepository),
                         presente,
                         "regardons"
                     ),
                        new FraseAmbienteCasaEntity(
-                        buscarPronome("je", pronomeRepository),
+                        buscarPronome("Je", pronomeRepository),
                         buscarVerbo("manger", verboRepository),
                         buscarComplemento("une pomme", complementoRepository),
                         presente,
                         "mange"
                     ),
                     new FraseAmbienteCasaEntity(
-                        buscarPronome("vous", pronomeRepository),
-                        buscarVerbo("jouer", verboRepository),
-                        buscarComplemento("au football", complementoRepository),
+                        buscarPronome("Nous", pronomeRepository),
+                        buscarVerbo("régarder", verboRepository),
+                        buscarComplemento("la télévision", complementoRepository),
                         presente,
-                        "jouez"
+                        "regardons"
                     ),
                     new FraseAmbienteCasaEntity(
-                        buscarPronome("je", pronomeRepository),
+                        buscarPronome("Je", pronomeRepository),
                         buscarVerbo("laver", verboRepository),
                         buscarComplemento("mes vêtements", complementoRepository),
                         presente,
@@ -338,175 +338,175 @@ new FraseAmbienteCasaEntity(
                         "répètes"
                     ),
                     new FraseAmbienteCasaEntity(
-                        buscarPronome("il", pronomeRepository),
+                        buscarPronome("Il", pronomeRepository),
                         buscarVerbo("écouter", verboRepository),
                         buscarComplemento("la musique", complementoRepository),
                         presente,
                         "écoute"
                     ),
                     new FraseAmbienteCasaEntity(
-                        buscarPronome("ils", pronomeRepository),
+                        buscarPronome("Ils", pronomeRepository),
                         buscarVerbo("regarder", verboRepository),
-                        buscarComplemento("le bus", complementoRepository),
+                        buscarComplemento("la télévision", complementoRepository),
                         presente,
                         "regardent"
                     ),
                     // Frase adicional para completar 23
                     new FraseAmbienteCasaEntity(
-                        buscarPronome("elles", pronomeRepository),
+                        buscarPronome("Elles", pronomeRepository),
                         buscarVerbo("parler", verboRepository),
                         buscarComplemento("en famille", complementoRepository),
                         presente,
                         "parlent"
                     ),
                     new FraseAmbienteCasaEntity(
-    buscarPronome("je", pronomeRepository),
+    buscarPronome("Je", pronomeRepository),
     buscarVerbo("faire", verboRepository),
-    buscarComplemento("les devoirs", complementoRepository),
+    buscarComplemento("les devoirs.", complementoRepository),
     presente,
     "fais"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("tu", pronomeRepository),
+    buscarPronome("Tu", pronomeRepository),
     buscarVerbo("lire", verboRepository),
     buscarComplemento("un livre", complementoRepository),
     presente,
     "lis"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("il", pronomeRepository),
+    buscarPronome("Il", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
     buscarComplemento("la musique", complementoRepository),
     presente,
     "écoute"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("elle", pronomeRepository),
+    buscarPronome("Elle", pronomeRepository),
     buscarVerbo("travailler", verboRepository),
     buscarComplemento("à la maison", complementoRepository),
     presente,
     "travaille"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("nous", pronomeRepository),
+    buscarPronome("Nous", pronomeRepository),
     buscarVerbo("manger", verboRepository),
     buscarComplemento("à midi", complementoRepository),
     presente,
     "mangeons"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("boire", verboRepository),
     buscarComplemento("de l'eau", complementoRepository),
     presente,
     "buvez"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("ils", pronomeRepository),
+    buscarPronome("Ils", pronomeRepository),
     buscarVerbo("faire", verboRepository),
     buscarComplemento("du ménage", complementoRepository),
     presente,
     "font"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("elles", pronomeRepository),
+    buscarPronome("Elles", pronomeRepository),
     buscarVerbo("regarder", verboRepository),
     buscarComplemento("le film", complementoRepository),
     presente,
     "regardent"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("je", pronomeRepository),
+    buscarPronome("Je", pronomeRepository),
     buscarVerbo("répéter", verboRepository),
     buscarComplemento("les informations", complementoRepository),
     presente,
     "répète"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("tu", pronomeRepository),
+    buscarPronome("Tu", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
     buscarComplemento("la radio", complementoRepository),
     presente,
     "écoutes"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("nous", pronomeRepository),
+    buscarPronome("Nous", pronomeRepository),
     buscarVerbo("ranger", verboRepository),
     buscarComplemento("la chambre", complementoRepository),
     presente,
     "rangeons"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("préparer", verboRepository),
     buscarComplemento("le dîner", complementoRepository),
     presente,
     "préparez"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarComplemento("les", complementoRepository),
     presente,
     "écoutez"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
     buscarComplemento("la musique", complementoRepository),
     presente,
     "écoutez"
 ),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("boire", verboRepository),
     buscarComplemento("de l'eau", complementoRepository),
     presente,
     "buvez"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("ils", pronomeRepository),
+    buscarPronome("Ils", pronomeRepository),
     buscarVerbo("faire", verboRepository),
     buscarComplemento("du ménage", complementoRepository),
     presente,
     "font"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("elles", pronomeRepository),
+    buscarPronome("Elles", pronomeRepository),
     buscarVerbo("regarder", verboRepository),
     buscarComplemento("le film", complementoRepository),
     presente,
     "regardent"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("je", pronomeRepository),
+    buscarPronome("Je", pronomeRepository),
     buscarVerbo("répéter", verboRepository),
     buscarComplemento("les informations", complementoRepository),
     presente,
     "répète"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("tu", pronomeRepository),
+    buscarPronome("IL", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
     buscarComplemento("la radio", complementoRepository),
     presente,
-    "écoutes"
+    "écoute"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("nous", pronomeRepository),
+    buscarPronome("Il", pronomeRepository),
     buscarVerbo("ranger", verboRepository),
     buscarComplemento("la chambre", complementoRepository),
     presente,
-    "rangeons"
+    "range"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("préparer", verboRepository),
     buscarComplemento("le dîner", complementoRepository),
     presente,
     "préparez"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
     buscarComplemento("la musique", complementoRepository),
     presente,
@@ -514,153 +514,153 @@ new FraseAmbienteCasaEntity(
 ),
 
 new FraseAmbienteCasaEntity(
-    buscarPronome("je", pronomeRepository),
+    buscarPronome("Je", pronomeRepository),
     buscarVerbo("répéter", verboRepository),
     buscarComplemento("les informations", complementoRepository),
     presente,
     "répète"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarComplemento("les informations", complementoRepository),
     presente,
     "écoutez"
 ),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Ils", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarComplemento("les informations", complementoRepository),
     presente,
-    "écoutez"
+    "écoutent"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Nous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarComplemento("les informations", complementoRepository),
+    presente,
+    "écoutons"
+),new FraseAmbienteCasaEntity(
+    buscarPronome("Il", pronomeRepository),
+    buscarVerbo("lire", verboRepository),
+    buscarComplemento("un live", complementoRepository),
+    presente,
+    "lit"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("Elles", pronomeRepository),
+    buscarVerbo("écouter", verboRepository),
+    buscarComplemento("les informations", complementoRepository),
+    presente,
+    "écoutent"
+),new FraseAmbienteCasaEntity(
+    buscarPronome("Nous", pronomeRepository),
+    buscarVerbo("répéter", verboRepository),
+    buscarComplemento(" les  devoir", complementoRepository),
+    presente,
+    "répétons"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("Je", pronomeRepository),
+    buscarVerbo("faire", verboRepository),
+    buscarComplemento("mes devoirs", complementoRepository),
+    presente,
+    "fais"
+),new FraseAmbienteCasaEntity(
+    buscarPronome("Tu", pronomeRepository),
+    buscarVerbo("travailler", verboRepository),
+    buscarComplemento("à la maison", complementoRepository),
+    presente,
+    "travailles"
+),
+new FraseAmbienteCasaEntity(
+    buscarPronome("Vous", pronomeRepository),
+    buscarVerbo("écouter", verboRepository),
+    buscarComplemento("à la maison", complementoRepository),
     presente,
     "écoutez"
 ),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Nous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarComplemento("à la maison", complementoRepository),
     presente,
-    "écoutez"
+    "écoutons"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarPronome("Il", pronomeRepository),
+    buscarVerbo("regarder", verboRepository),
+    buscarComplemento("le tableu", complementoRepository),
     presente,
-    "écoutez"
+    "regarde"
 ),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarPronome("Vous", pronomeRepository),
+    buscarVerbo("faire", verboRepository),
+    buscarComplemento("les devoirs", complementoRepository),
     presente,
-    "écoutez"
+    "faites"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarPronome("Vous", pronomeRepository),
+    buscarVerbo("regarde", verboRepository),
+    buscarComplemento("le tableau", complementoRepository),
     presente,
-    "écoutez"
+    "regardez"
 ),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
     buscarComplemento("la musique", complementoRepository),
     presente,
     "écoutez"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarPronome("Nous", pronomeRepository),
+    buscarVerbo("faire", verboRepository),
+    buscarComplemento("les devoirs", complementoRepository),
     presente,
-    "écoutez"
+    "faisons"
 ),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Elle", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarComplemento("les informations", complementoRepository),
     presente,
-    "écoutez"
+    "écoute"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarPronome("Elle", pronomeRepository),
+    buscarVerbo("regarde", verboRepository),
+    buscarComplemento("le tableau", complementoRepository),
     presente,
-    "écoutez"
+    "regarde"
 ),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarPronome("Il", pronomeRepository),
+    buscarVerbo("travailler", verboRepository),
+    buscarComplemento("à la maison", complementoRepository),
     presente,
-    "écoutez"
+    "travaille"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarPronome("Ils", pronomeRepository),
+    buscarVerbo("lire", verboRepository),
+    buscarComplemento("un livre", complementoRepository),
     presente,
-    "écoutez"
-),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
-    presente,
-    "écoutez"
+    "lisent"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarPronome("Vous", pronomeRepository),
+    buscarVerbo("lire", verboRepository),
+    buscarComplemento("un livre", complementoRepository),
     presente,
-    "écoutez"
-),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
-    presente,
-    "écoutez"
-),
-new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
-    presente,
-    "écoutez"
-),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
-    presente,
-    "écoutez"
-),
-new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
-    presente,
-    "écoutez"
-),
-new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
-    presente,
-    "écoutez"
+    "lisez"
 ),
 
 new FraseAmbienteCasaEntity(
-    buscarPronome("je", pronomeRepository),
-    buscarVerbo("répéter", verboRepository),
-    buscarComplemento("les informations", complementoRepository),
+    buscarPronome("Je", pronomeRepository),
+    buscarVerbo("faire", verboRepository),
+    buscarComplemento("les devoirs", complementoRepository),
     presente,
-    "répète"
+    "fais"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
     buscarComplemento("la musique", complementoRepository),
     presente,
@@ -686,13 +686,13 @@ new FraseAmbienteCasaEntity(
     "écoutez"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
     buscarComplemento("la musique", complementoRepository),
     presente,
     "écoutez"
 ),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
     buscarComplemento("la musique", complementoRepository),
     presente,
@@ -705,7 +705,7 @@ new FraseAmbienteCasaEntity(
     presente,
     "écoutez"
 ),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
     buscarComplemento("la musique", complementoRepository),
     presente,
@@ -718,7 +718,7 @@ new FraseAmbienteCasaEntity(
     presente,
     "écoutez"
 ),new FraseAmbienteCasaEntity(
-    buscarPronome("vous", pronomeRepository),
+    buscarPronome("Vous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),
     buscarComplemento("la musique", complementoRepository),
     presente,

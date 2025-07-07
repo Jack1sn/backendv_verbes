@@ -45,70 +45,68 @@ public class FraseCasaService {
                 .map(this::toDTO);
     }
 
-   @Transactional
-public FraseCasaDTO salvar(FraseCasaDTO dto) {
-    // Buscar ou criar a entidade
-    FraseAmbienteCasaEntity entity = (dto.getId() != null)
-            ? fraseRepo.findById(dto.getId()).orElseThrow(() -> new NotFoundException("Frase não encontrada para atualizar."))
-            : new FraseAmbienteCasaEntity();
+    @Transactional
+    public FraseCasaDTO salvar(FraseCasaDTO dto) {
+        // Buscar ou criar a entidade
+        FraseAmbienteCasaEntity entity = (dto.getId() != null)
+                ? fraseRepo.findById(dto.getId()).orElseThrow(() -> new NotFoundException("Frase não encontrada para atualizar."))
+                : new FraseAmbienteCasaEntity();
 
-    // ----- PRONOME -----
-    if (dto.getPronomeId() != null) {
-        entity.setPronome(pronomeRepo.findById(dto.getPronomeId())
-                .orElseThrow(() -> new NotFoundException("Pronome não encontrado.")));
-    } else if (dto.getPronomeTexto() != null) {
-        entity.setPronome(pronomeRepo.findByTexto(dto.getPronomeTexto())
-                .orElseThrow(() -> new NotFoundException("Pronome não encontrado: " + dto.getPronomeTexto())));
-    }
+        // ----- PRONOME -----
+        if (dto.getPronomeId() != null) {
+            entity.setPronome(pronomeRepo.findById(dto.getPronomeId())
+                    .orElseThrow(() -> new NotFoundException("Pronome não encontrado.")));
+        } else if (dto.getPronomeTexto() != null) {
+            entity.setPronome(pronomeRepo.findByTexto(dto.getPronomeTexto())
+                    .orElseThrow(() -> new NotFoundException("Pronome não encontrado: " + dto.getPronomeTexto())));
+        }
 
-    // ----- VERBO -----
-    if (dto.getVerboInfinitivoId() != null) {
-        entity.setVerboInfinitivo(verboRepo.findById(dto.getVerboInfinitivoId())
-                .orElseThrow(() -> new NotFoundException("Verbo não encontrado.")));
-    } else if (dto.getVerboTexto() != null) {
-        entity.setVerboInfinitivo(verboRepo.findByVerbo(dto.getVerboTexto())
-                .orElseThrow(() -> new NotFoundException("Verbo não encontrado: " + dto.getVerboTexto())));
-    }
+        // ----- VERBO -----
+        if (dto.getVerboInfinitivoId() != null) {
+            entity.setVerboInfinitivo(verboRepo.findById(dto.getVerboInfinitivoId())
+                    .orElseThrow(() -> new NotFoundException("Verbo não encontrado.")));
+        } else if (dto.getVerboTexto() != null) {
+            entity.setVerboInfinitivo(verboRepo.findByVerbo(dto.getVerboTexto())
+                    .orElseThrow(() -> new NotFoundException("Verbo não encontrado: " + dto.getVerboTexto())));
+        }
 
-    // ----- TEMPO VERBAL -----
-    if (dto.getTempoVerbalId() != null) {
-        entity.setTempoVerbal(tempoRepo.findById(dto.getTempoVerbalId())
-                .orElseThrow(() -> new NotFoundException("Tempo verbal não encontrado.")));
-    } else if (dto.getTempoVerbalTexto() != null) {
-        entity.setTempoVerbal(tempoRepo.findByTempo(dto.getTempoVerbalTexto())
-                .orElseThrow(() -> new NotFoundException("Tempo verbal não encontrado: " + dto.getTempoVerbalTexto())));
-    }
+        // ----- TEMPO VERBAL -----
+        if (dto.getTempoVerbalId() != null) {
+            entity.setTempoVerbal(tempoRepo.findById(dto.getTempoVerbalId())
+                    .orElseThrow(() -> new NotFoundException("Tempo verbal não encontrado.")));
+        } else if (dto.getTempoVerbalTexto() != null) {
+            entity.setTempoVerbal(tempoRepo.findByTempo(dto.getTempoVerbalTexto())
+                    .orElseThrow(() -> new NotFoundException("Tempo verbal não encontrado: " + dto.getTempoVerbalTexto())));
+        }
 
-    // ----- COMPLEMENTO -----
-    if (dto.getComplementoId() != null) {
-        entity.setComplemento(complementoRepo.findById(dto.getComplementoId())
-                .orElseThrow(() -> new NotFoundException("Complemento não encontrado.")));
-    } else if (dto.getComplementoDescricao() != null && !dto.getComplementoDescricao().isBlank()) {
-        // Buscar complemento existente
-        Optional<ComplementoEntity> existente = complementoRepo.findByDescricao(dto.getComplementoDescricao().trim());
-        
-        // Se não existir, cria um novo complemento
-        ComplementoEntity complemento = existente.orElseGet(() -> {
-            ComplementoEntity novo = new ComplementoEntity();
-            novo.setDescricao(dto.getComplementoDescricao().trim());
-            return complementoRepo.save(novo);  // Salva o novo complemento
-        });
-        
-        entity.setComplemento(complemento);
-    } else {
-        // Se não encontrar nem o ID nem a descrição, lança uma exceção específica
-        throw new NotFoundException("Complemento é obrigatório.");
-    }
+      
+       // ----- COMPLEMENTO -----
+if (dto.getComplementoId() != null) {
+    entity.setComplemento(complementoRepo.findById(dto.getComplementoId())
+            .orElseThrow(() -> new NotFoundException("Complemento não encontrado.")));
+} else if (dto.getComplementoDescricao() != null && !dto.getComplementoDescricao().trim().isEmpty()) {
+    String descricao = dto.getComplementoDescricao().trim();
 
-    // ----- RESPOSTA CORRETA -----
-    entity.setRespostaCorreta(dto.getRespostaCorreta());
+    // Verificar se o complemento já existe
+    ComplementoEntity complementoExistente = complementoRepo.findByDescricao(descricao)
+            .orElseThrow(() -> new NotFoundException("Complemento não encontrado com a descrição: " + descricao));
 
-    // Salvar ou atualizar a entidade
-    FraseAmbienteCasaEntity salvo = fraseRepo.save(entity);
-
-    // Retorna o DTO com os dados atualizados
-    return toDTO(salvo);
+    // Usar o complemento existente
+    entity.setComplemento(complementoExistente);
+} else {
+    throw new NotFoundException("Complemento é obrigatório.");
 }
+
+       
+        // ----- RESPOSTA CORRETA -----
+        entity.setRespostaCorreta(dto.getRespostaCorreta());
+
+        // Salvar ou atualizar a entidade
+        FraseAmbienteCasaEntity salvo = fraseRepo.save(entity);
+
+        // Retorna o DTO com os dados atualizados
+        return toDTO(salvo);
+    }
 
     // Deletar uma frase
     @Transactional
@@ -126,6 +124,7 @@ public FraseCasaDTO salvar(FraseCasaDTO dto) {
         dto.setPronomeId(entity.getPronome().getId());
         dto.setVerboInfinitivoId(entity.getVerboInfinitivo().getId());
         dto.setComplementoId(entity.getComplemento().getId());
+        dto.setComplementoDescricao(entity.getComplemento().getDescricao());  // Inclui a descrição do complemento
         dto.setTempoVerbalId(entity.getTempoVerbal().getId());
         dto.setRespostaCorreta(entity.getRespostaCorreta());
 

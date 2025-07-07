@@ -1,5 +1,7 @@
 package br.net.villeverbes.entity;
 
+
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +15,7 @@ public class FraseAmbienteCasaEntity {
     // Relacionamento com a entidade Pronome
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pronome_id", nullable = false)
+   
     private PronomeEntity pronome;
 
     @Column(name = "pronome_texto", nullable = false)

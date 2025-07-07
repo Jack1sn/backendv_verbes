@@ -65,6 +65,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/frases/**").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/frases/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/frases/").permitAll() 
+                .requestMatchers(HttpMethod.DELETE, "/api/frases/{id}").permitAll()  // Permitir para qualquer usuário
+
                 // Endpoints de jogo públicos
                 .requestMatchers(HttpMethod.GET, "/api/jogos/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/jogos/**").permitAll()

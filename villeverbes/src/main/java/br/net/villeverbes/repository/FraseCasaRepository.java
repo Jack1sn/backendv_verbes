@@ -1,9 +1,13 @@
 package br.net.villeverbes.repository;
 
 import br.net.villeverbes.entity.FraseAmbienteCasaEntity;
+import jakarta.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -50,4 +54,10 @@ public interface FraseCasaRepository extends JpaRepository<FraseAmbienteCasaEnti
         "pronomeTexto", "verboInfinitivo", "complementoDescricao", "tempo"
     })
     List<FraseAmbienteCasaEntity> findByVerboInfinitivoVerbo(String verbo);
+
+    @Transactional
+@Modifying
+@Query("DELETE FROM FraseAmbienteCasaEntity f WHERE f.id = :id")
+void deleteFraseById(@Param("id") Long id);
+
 }

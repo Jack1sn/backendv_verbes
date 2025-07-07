@@ -3,6 +3,7 @@ package br.net.villeverbes.entity;
 import jakarta.persistence.*;
 
 @Entity
+
 @Table(name = "tb_pronome")
 public class PronomeEntity {
 

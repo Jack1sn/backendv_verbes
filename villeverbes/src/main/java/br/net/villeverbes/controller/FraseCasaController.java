@@ -36,12 +36,12 @@ public class FraseCasaController {
 
     // POST - criar nova com validação
    
-    @PostMapping
-    public ResponseEntity<FraseCasaDTO> salvarFrase(@RequestBody FraseCasaDTO dto) {
-        // Salva a frase e retorna o DTO da resposta
-        FraseCasaDTO savedFrase = fraseCasaService.salvar(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedFrase);
-    }
+  @PostMapping
+public ResponseEntity<FraseCasaDTO> salvarFrase(@Valid @RequestBody FraseCasaDTO dto) {
+    FraseCasaDTO savedFrase = fraseCasaService.salvar(dto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(savedFrase);
+}
+
 
     // PUT - atualizar existente com validação e garantia do id
     @PutMapping("/{id}")
