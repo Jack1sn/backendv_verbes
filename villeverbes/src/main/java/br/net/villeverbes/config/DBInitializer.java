@@ -177,19 +177,20 @@ public class DBInitializer {
                         new ComplementoEntity("dans le miroir"),
                         new ComplementoEntity("l'abat-jour"),
                           new ComplementoEntity("une chaise"),
-
+                         new ComplementoEntity("l'arbre"),                                  
                         new ComplementoEntity("la fleur"), 
                         new ComplementoEntity("une fleur sur la table"),
                         new ComplementoEntity("dans la cuisine"),
                         new ComplementoEntity("la cuisinière"),
                         new ComplementoEntity("au Parc à vélo"),
                         new ComplementoEntity("sur l'herbe"),
-                        new ComplementoEntity("avec la roulette"),
+                        new ComplementoEntity("un lit gonflable"),
                         new ComplementoEntity("un vélo"),
                         new ComplementoEntity("sur un vélo"),
                         new ComplementoEntity("du vélo tous les jours"),
                         new ComplementoEntity("un quad"),
                         new ComplementoEntity("la roulette"),
+                          new ComplementoEntity("avec la roulette"),
                         new ComplementoEntity("au tableau"),
                         new ComplementoEntity("une plume sur le bureau"),
                         new ComplementoEntity("la fenêtre"),
@@ -200,7 +201,8 @@ public class DBInitializer {
                         new ComplementoEntity("un bouquet de fleurs"),
                          new ComplementoEntity("la lampe"),
                         new ComplementoEntity("la fleur sur la table"),
-                        new ComplementoEntity("à l'extérieur")
+                        new ComplementoEntity("à l'extérieur"),
+                         new ComplementoEntity("avec une roulette")
                      
                        
 
@@ -406,11 +408,11 @@ new FraseAmbienteCasaEntity(
         // Frases  para ambiente parque
 
                     new FraseAmbienteCasaEntity(
-    buscarPronome("Il", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),
-    buscarComplemento("la musique", complementoRepository),
+    buscarPronome("Je", pronomeRepository),
+    buscarVerbo("repeter", verboRepository),
+    buscarComplemento("les informations", complementoRepository),
     presente,
-    "écoute"
+    "repète"
 ),
 new FraseAmbienteCasaEntity(
     buscarPronome("Elle", pronomeRepository),
@@ -420,18 +422,18 @@ new FraseAmbienteCasaEntity(
     "vient"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("Il", pronomeRepository),
-    buscarVerbo("marcher", verboRepository),
+    buscarPronome("Ils", pronomeRepository),
+    buscarVerbo("jouer", verboRepository),
     buscarComplemento("sur l'herbe", complementoRepository), // -3
     presente,
-    "marche"
+    "jouent"
 ),
 new FraseAmbienteCasaEntity(
     buscarPronome("Il", pronomeRepository),
-    buscarVerbo("jouer", verboRepository),
-    buscarComplemento("avec la roulette", complementoRepository),
+    buscarVerbo("acheter", verboRepository),
+    buscarComplemento("un lit gonflable", complementoRepository),
     presente,
-    "joue"
+    "achète"
 ),
 new FraseAmbienteCasaEntity(
     buscarPronome("Nous", pronomeRepository),
@@ -448,11 +450,11 @@ new FraseAmbienteCasaEntity(
     "fait"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("Il", pronomeRepository),
-    buscarVerbo("pédaler", verboRepository),                    //7
-    buscarComplemento("sur un vélo", complementoRepository),
+    buscarPronome("Elles", pronomeRepository),
+    buscarVerbo("faire", verboRepository),                    //7
+    buscarComplemento("du sport à vélo", complementoRepository),
     presente,
-    "pédale"
+    "font"
 ),
 new FraseAmbienteCasaEntity(
     buscarPronome("Je", pronomeRepository),
@@ -463,33 +465,33 @@ new FraseAmbienteCasaEntity(
 ),
 new FraseAmbienteCasaEntity(
     buscarPronome("Il", pronomeRepository),
-    buscarVerbo("piloter", verboRepository),    //9
+    buscarVerbo("acheter", verboRepository),    //9
     buscarComplemento("un quad", complementoRepository),
     presente,
-    "pilote"
+    "achète"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("Il", pronomeRepository),
-    buscarVerbo("arrêter", verboRepository),
-    buscarComplemento("la roulette", complementoRepository), // 10
+    buscarPronome("vous", pronomeRepository),
+    buscarVerbo("jouer", verboRepository),
+    buscarComplemento("avec une roulette", complementoRepository), // 10
     presente,
-    "arrête"
+    "jouez"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("Il", pronomeRepository),     //11
+    buscarPronome("Nous", pronomeRepository),     //11
     buscarVerbo("marcher", verboRepository),
     buscarComplemento("sur l'herbe", complementoRepository),
     presente,
-    "marche"
+    "marchons"
 ),
 
 ///***** frases aleatórias para amb. parque */
 new FraseAmbienteCasaEntity(
-    buscarPronome("Il", pronomeRepository),
-    buscarVerbo("écouter", verboRepository),  // 1
-    buscarComplemento("la radio", complementoRepository),
+    buscarPronome("Elle", pronomeRepository),
+    buscarVerbo("repeter", verboRepository),  // 1
+    buscarComplemento("les informations", complementoRepository),
     presente,
-    "écoute"
+    "repète"
 ),
 new FraseAmbienteCasaEntity(            //2
     buscarPronome("Il", pronomeRepository),
@@ -512,11 +514,11 @@ new FraseAmbienteCasaEntity(
     "jouons"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("J'", pronomeRepository),
+    buscarPronome("vous", pronomeRepository),
     buscarVerbo("écouter", verboRepository),  //5
     buscarComplemento("la radio", complementoRepository),
     presente,
-    "écoute"
+    "écoutez"
 ),
 new FraseAmbienteCasaEntity(
     buscarPronome("Je", pronomeRepository), //6
@@ -526,11 +528,11 @@ new FraseAmbienteCasaEntity(
     "fais"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("Je", pronomeRepository),   //7
-    buscarVerbo("pédaler", verboRepository),
-    buscarComplemento("un vélo", complementoRepository),
+    buscarPronome("Ils", pronomeRepository),   //7
+    buscarVerbo("faire", verboRepository),
+    buscarComplemento("du sport à vélo", complementoRepository),
     presente,
-    "pédale"
+    "font"
 ),
 new FraseAmbienteCasaEntity(
     buscarPronome("Elle", pronomeRepository),     //8
@@ -540,18 +542,18 @@ new FraseAmbienteCasaEntity(
     "fais"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("Je", pronomeRepository),     //9
-    buscarVerbo("piloter", verboRepository),
+    buscarPronome("Elle", pronomeRepository),     //9
+    buscarVerbo("acheter", verboRepository),
     buscarComplemento("un quad", complementoRepository),
     presente,
-    "pilote"
+    "achète"
 ),
 new FraseAmbienteCasaEntity(
-    buscarPronome("J'", pronomeRepository), //10
-    buscarVerbo("arrêter", verboRepository),
-    buscarComplemento("la roulette", complementoRepository),
+    buscarPronome("Vous", pronomeRepository), //10
+    buscarVerbo("jouer", verboRepository),
+    buscarComplemento("avec une roulette", complementoRepository),
     presente,
-    "arrête"
+    "jouez"
 ),
 new FraseAmbienteCasaEntity(
     buscarPronome("Tu", pronomeRepository), //11
