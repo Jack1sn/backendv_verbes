@@ -22,7 +22,7 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
     // Listar todos os usuários de um determinado perfil
     List<UsuarioEntity> findByPerfil(String perfil);
 
-     List<UsuarioEntity> findByPerfilAndAtivo(String perfil, Boolean ativo);
+     List<UsuarioEntity> findByPerfilAndActif(String perfil, Boolean actif);
 
     // Buscar um usuário pelo ID e perfil (útil para autorização e validação)
     Optional<UsuarioEntity> findByIdAndPerfil(Long id, String perfil);
@@ -40,7 +40,7 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
     // Optional<UsuarioEntity> findByEmailAndAtivoTrue(String email);
 
     // Correto: retorna jogadores ativos
-        List<UsuarioEntity> findByPerfilAndAtivoTrue(String perfil);
+        List<UsuarioEntity> findByPerfilAndActifTrue(String perfil);
 
 
 }

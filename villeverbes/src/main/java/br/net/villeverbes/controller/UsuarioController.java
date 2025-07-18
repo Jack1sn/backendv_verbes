@@ -50,7 +50,7 @@ public ResponseEntity<?> autoCadastro(@RequestBody UsuarioDTO usuarioDTO) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(Map.of("message", "Jogador cadastrado com sucesso! Senha enviada por email."));
+                .body(Map.of("message", "Joueur enregistré avec succèss! Senha enviada por email."));
     } catch (Exception e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -185,24 +185,24 @@ public ResponseEntity<?> listarJogadores() {
 /**
  * Bloquear ou desbloquear jogador
  */
-@PutMapping("usuario/jogadores/{id}/ativo")
+@PutMapping("usuario/jogadores/{id}/actif")
 public ResponseEntity<?> atualizarStatusJogador(
         @PathVariable Long id,
-        @RequestParam boolean ativo
+        @RequestParam boolean actif
 ) {
     try {
         Optional<UsuarioEntity> jogadorOptional = usuarioService.findById(id);
-        if (jogadorOptional.isEmpty() || !"JOGADOR".equals(jogadorOptional.get().getPerfil())) {
+        if (jogadorOptional.isEmpty() || !"JOUEUR".equals(jogadorOptional.get().getPerfil())) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", "Jogador não encontrado"));
         }
 
         UsuarioEntity jogador = jogadorOptional.get();
-        jogador.setAtivo(ativo);
+        jogador.setActif(actif);
         usuarioService.atualizar(id, new UsuarioDTO(jogador)); // Atualiza com base no DTO
         return ResponseEntity.ok(Map.of(
-                "message", ativo ? "Jogador desbloqueado com sucesso" : "Jogador bloqueado com sucesso"
+                "message", actif ? "Jogador desbloqueado com sucesso" : "Jogador bloqueado com sucesso"
         ));
     } catch (Exception e) {
         return ResponseEntity

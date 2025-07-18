@@ -41,16 +41,16 @@ public class UsuarioEntity {
     private String login;
 
     @Column(nullable = false)
-    private boolean ativo = true;
+    private boolean actif = true;
 
     // Getters e Setters
 
-    public boolean isAtivo() {
-        return ativo;
+    public boolean isActif() {
+        return actif;
     }
 
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
+    public void setActif(boolean actif) {
+        this.actif = actif;
     }
        // Aqui está o relacionamento com jogos
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -33,7 +33,7 @@ public class DBInitializer {
             // Usuários iniciais
             String senhaCriptografada = passwordEncoder.encode("0505");
 
-            criarUsuarioSeNaoExistir(usuarioRepository, "ana@gmail.com", "Ana Paula", "JOGADOR", senhaCriptografada,
+            criarUsuarioSeNaoExistir(usuarioRepository, "ana@gmail.com", "Ana Paula", "JOUEUR", senhaCriptografada,
                     LocalDate.parse("1990-01-01"), "ana_paula", "123.456.789-00", "41 98765-4321",
                     "80010-000", "Rua das Flores", "123", "Apto 12", "Centro", "Curitiba", "PR");
 
@@ -42,7 +42,7 @@ public class DBInitializer {
                     "41 91234-5678", "80010-001", "Av. Brasil", "456", "Sala 1", "Centro", "Curitiba", "PR");
 
             criarColaboradorSeNaoExistir(usuarioRepository, "colaborador1@villedeverbes.com",
-                    "Maria Colaboradora", "COLABORADOR", senhaCriptografada,
+                    "Maria Colaboradora", "COLABORATEUR", senhaCriptografada,
                     LocalDate.parse("1992-08-15"), "41 99876-5432");
 
             // Ajuda

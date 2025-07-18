@@ -29,11 +29,11 @@ public class UsuarioService {
 
       
         if (dto.getNome() == null || dto.getEmail() == null) {
-            throw new IllegalArgumentException("Nome e e-mail são obrigatórios");
+            throw new IllegalArgumentException("Nom e e-mail sont obrigatoires");
         }
 
         if (usuarioRepository.findByEmail(dto.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("E-mail já cadastrado");
+            throw new IllegalArgumentException("E-mail déjà utilisé");
         }
 
         String senhaCriptografada = passwordEncoder.encode(senha);
@@ -54,7 +54,7 @@ public class UsuarioService {
         usuario.setCidade(dto.getCidade());
         usuario.setEstado(dto.getEstado());
         usuario.setLogin(dto.getEmail());
-         usuario.setAtivo(true);
+         usuario.setActif(true);
         
 
         return usuarioRepository.save(usuario);
@@ -67,10 +67,10 @@ public class UsuarioService {
 public UsuarioEntity salvarJogador(UsuarioDTO dto) {
     
     if (dto.getSenha() == null || dto.getSenha().isEmpty()) {
-        throw new IllegalArgumentException("Senha para jogador é obrigatória");
+        throw new IllegalArgumentException("Mot de passe pour Joueur  est obrigatoire");
     }
     
-    return salvarUsuarioComPerfil(dto, dto.getSenha(), "JOGADOR");
+    return salvarUsuarioComPerfil(dto, dto.getSenha(), "JOUEUR");
 }
 
 
@@ -80,9 +80,9 @@ public UsuarioEntity salvarJogador(UsuarioDTO dto) {
     @Transactional
     public UsuarioEntity salvarColaborador(UsuarioDTO dto) {
         if (dto.getSenha() == null || dto.getSenha().isEmpty()) {
-            throw new IllegalArgumentException("Senha para colaborador é obrigatória");
+            throw new IllegalArgumentException("Mot de passe  pour colaborateur est obrigatoire");
         }
-        return salvarUsuarioComPerfil(dto, dto.getSenha(), "COLABORADOR");
+        return salvarUsuarioComPerfil(dto, dto.getSenha(), "COLABORATEUR");
     }
 
     public Optional<UsuarioEntity> buscarPorEmail(String email) {
@@ -100,7 +100,7 @@ public UsuarioEntity salvarJogador(UsuarioDTO dto) {
     public UsuarioEntity atualizar(Long id, UsuarioDTO dto) {
         Optional<UsuarioEntity> usuarioOptional = usuarioRepository.findById(id);
         if (!usuarioOptional.isPresent()) {
-            throw new IllegalArgumentException("Usuário não encontrado");
+            throw new IllegalArgumentException("Utilisateur indisponible");
         }
 
         UsuarioEntity usuario = usuarioOptional.get();
@@ -147,7 +147,7 @@ public UsuarioEntity salvarJogador(UsuarioDTO dto) {
      * Lista colaboradores convertidos para DTO
      */
     public List<UsuarioDTO> listarColaboradores() {
-        return usuarioRepository.findByPerfil("COLABORADOR")
+        return usuarioRepository.findByPerfil("COLABORATEUR")
                 .stream()
                 .map(UsuarioDTO::new)
                 .collect(Collectors.toList());
@@ -157,25 +157,25 @@ public UsuarioEntity salvarJogador(UsuarioDTO dto) {
 @Transactional
 public void bloquearJogador(Long id) {
     UsuarioEntity jogador = usuarioRepository.findById(id)
-        .filter(u -> "JOGADOR".equalsIgnoreCase(u.getPerfil()))
-        .orElseThrow(() -> new IllegalArgumentException("Jogador não encontrado"));
+        .filter(u -> "JOUEUR".equalsIgnoreCase(u.getPerfil()))
+        .orElseThrow(() -> new IllegalArgumentException("Joueur indisponible"));
 
-    jogador.setAtivo(false);
+    jogador.setActif(false);
     usuarioRepository.save(jogador);
 }
 
 @Transactional
 public void desbloquearJogador(Long id) {
     UsuarioEntity jogador = usuarioRepository.findById(id)
-        .filter(u -> "JOGADOR".equalsIgnoreCase(u.getPerfil()))
-        .orElseThrow(() -> new IllegalArgumentException("Jogador não encontrado"));
+        .filter(u -> "JOUEUR".equalsIgnoreCase(u.getPerfil()))
+        .orElseThrow(() -> new IllegalArgumentException("Joueur indisponible"));
 
-    jogador.setAtivo(true);
+    jogador.setActif(true);
     usuarioRepository.save(jogador);
 }
 
 public List<UsuarioDTO> listarJogadores() {
-    return usuarioRepository.findByPerfilAndAtivo("JOGADOR", true)
+    return usuarioRepository.findByPerfilAndActif("JOUEUR", true)
             .stream()
             .map(UsuarioDTO::new)
             .collect(Collectors.toList());
@@ -184,10 +184,10 @@ public List<UsuarioDTO> listarJogadores() {
 @Transactional
 public void redefinirSenha(String email, String senhaAtual, String novaSenha) {
     UsuarioEntity usuario = usuarioRepository.findByEmail(email)
-        .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+        .orElseThrow(() -> new IllegalArgumentException("Utilisateur indisponible."));
 
     if (!passwordEncoder.matches(senhaAtual, usuario.getSenha())) {
-        throw new IllegalArgumentException("Senha atual incorreta.");
+        throw new IllegalArgumentException("Mot de passe actuel incorrete.");
     }
 
     usuario.setSenha(passwordEncoder.encode(novaSenha));
