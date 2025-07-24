@@ -152,7 +152,7 @@ public ResponseEntity<?> autoCadastro(@RequestBody UsuarioDTO usuarioDTO) {
             if (!colaboradorExistente.isPresent()) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .body(Map.of("error", "Colaborador não encontrado"));
+                        .body(Map.of("error", "Colaborateur indisponible"));
             }
 
             UsuarioEntity colaboradorAtualizado = usuarioService.atualizar(id, usuarioDTO);
@@ -160,7 +160,7 @@ public ResponseEntity<?> autoCadastro(@RequestBody UsuarioDTO usuarioDTO) {
 
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(Map.of("message", "Colaborador atualizado com sucesso", "usuario", respostaDTO));
+                    .body(Map.of("message", "Colaborateur atualisé avec sucèss", "usuario", respostaDTO));
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -179,35 +179,35 @@ public ResponseEntity<?> listarJogadores() {
     } catch (Exception e) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Erro ao buscar jogadores: " + e.getMessage()));
+                .body(Map.of("erreurr", "Erreur lors de la recherche des joueurs: " + e.getMessage()));
     }
 }
 /**
  * Bloquear ou desbloquear jogador
  */
-@PutMapping("usuario/jogadores/{id}/ativo")
+@PutMapping("usuario/jogadores/{id}/actif")
 public ResponseEntity<?> atualizarStatusJogador(
         @PathVariable Long id,
-        @RequestParam boolean ativo
+        @RequestParam boolean actif
 ) {
     try {
         Optional<UsuarioEntity> jogadorOptional = usuarioService.findById(id);
-        if (jogadorOptional.isEmpty() || !"JOGADOR".equals(jogadorOptional.get().getPerfil())) {
+        if (jogadorOptional.isEmpty() || !"JOUEUR".equals(jogadorOptional.get().getPerfil())) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Jogador não encontrado"));
+                    .body(Map.of("error", " Joueur indisponible"));
         }
 
         UsuarioEntity jogador = jogadorOptional.get();
-        jogador.setAtivo(ativo);
+        jogador.setAtivo(actif);
         usuarioService.atualizar(id, new UsuarioDTO(jogador)); // Atualiza com base no DTO
         return ResponseEntity.ok(Map.of(
-                "message", ativo ? "Jogador desbloqueado com sucesso" : "Jogador bloqueado com sucesso"
+                "message", actif ? "Joueur debloqué avec succès" : "Joueur bloqué avec succès"
         ));
     } catch (Exception e) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Erro ao atualizar status do jogador: " + e.getMessage()));
+                .body(Map.of("erreur", "Erreur lors de mise à jour le statut du joueur: " + e.getMessage()));
     }
 }
 

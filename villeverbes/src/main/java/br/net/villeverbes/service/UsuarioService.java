@@ -70,7 +70,7 @@ public UsuarioEntity salvarJogador(UsuarioDTO dto) {
         throw new IllegalArgumentException("Senha para jogador é obrigatória");
     }
     
-    return salvarUsuarioComPerfil(dto, dto.getSenha(), "JOGADOR");
+    return salvarUsuarioComPerfil(dto, dto.getSenha(), "JOUEUR");
 }
 
 
@@ -82,7 +82,7 @@ public UsuarioEntity salvarJogador(UsuarioDTO dto) {
         if (dto.getSenha() == null || dto.getSenha().isEmpty()) {
             throw new IllegalArgumentException("Senha para colaborador é obrigatória");
         }
-        return salvarUsuarioComPerfil(dto, dto.getSenha(), "COLABORADOR");
+        return salvarUsuarioComPerfil(dto, dto.getSenha(), "COLABORATEUR");
     }
 
     public Optional<UsuarioEntity> buscarPorEmail(String email) {
@@ -147,7 +147,7 @@ public UsuarioEntity salvarJogador(UsuarioDTO dto) {
      * Lista colaboradores convertidos para DTO
      */
     public List<UsuarioDTO> listarColaboradores() {
-        return usuarioRepository.findByPerfil("COLABORADOR")
+        return usuarioRepository.findByPerfil("COLABORATEUR")
                 .stream()
                 .map(UsuarioDTO::new)
                 .collect(Collectors.toList());
@@ -157,7 +157,7 @@ public UsuarioEntity salvarJogador(UsuarioDTO dto) {
 @Transactional
 public void bloquearJogador(Long id) {
     UsuarioEntity jogador = usuarioRepository.findById(id)
-        .filter(u -> "JOGADOR".equalsIgnoreCase(u.getPerfil()))
+        .filter(u -> "JOUEUR".equalsIgnoreCase(u.getPerfil()))
         .orElseThrow(() -> new IllegalArgumentException("Jogador não encontrado"));
 
     jogador.setAtivo(false);
@@ -167,7 +167,7 @@ public void bloquearJogador(Long id) {
 @Transactional
 public void desbloquearJogador(Long id) {
     UsuarioEntity jogador = usuarioRepository.findById(id)
-        .filter(u -> "JOGADOR".equalsIgnoreCase(u.getPerfil()))
+        .filter(u -> "JOUEUR".equalsIgnoreCase(u.getPerfil()))
         .orElseThrow(() -> new IllegalArgumentException("Jogador não encontrado"));
 
     jogador.setAtivo(true);
@@ -175,7 +175,7 @@ public void desbloquearJogador(Long id) {
 }
 
 public List<UsuarioDTO> listarJogadores() {
-    return usuarioRepository.findByPerfilAndAtivo("JOGADOR", true)
+    return usuarioRepository.findByPerfilAndAtivo("JOUEUR", true)
             .stream()
             .map(UsuarioDTO::new)
             .collect(Collectors.toList());
